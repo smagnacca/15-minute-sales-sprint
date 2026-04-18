@@ -219,6 +219,17 @@
     .form-fine .lock { color:var(--gold-mango); }
     .scarcity-line { text-align:center; font-size:13px; color:var(--gold-cream); background:rgba(238,175,0,0.08); border:1px solid rgba(238,175,0,0.25); border-radius:10px; padding:12px 18px; margin-bottom:24px; line-height:1.5; }
     .scarcity-line strong { color:var(--gold-mango); font-weight:800; }
+
+    /* === Attendance Counter === */
+    .attendance-ticker { display:inline-flex; align-items:center; gap:12px; background:rgba(238,175,0,0.12); border:1.5px solid rgba(238,175,0,0.45); border-radius:12px; padding:10px 18px; font-size:15px; font-weight:700; color:var(--gold-mango); margin:0 auto 20px; animation:float-badge 3.6s ease-in-out infinite; }
+    .attendance-ticker .count { font-size:24px; font-weight:900; color:var(--white); font-variant-numeric:tabular-nums; }
+    .attendance-ticker .capacity-warning { color:#ff6b6b; animation:attendance-pulse 1.2s ease-in-out infinite; }
+    @keyframes attendance-pulse { 0%,100%{color:#ff6b6b;text-shadow:0 0 8px rgba(255,107,107,0.3)} 50%{color:#ff8888;text-shadow:0 0 16px rgba(255,107,107,0.8)} }
+
+    .capacity-reached { background:rgba(255,107,107,0.1)!important; border:1.5px solid rgba(255,107,107,0.5)!important; padding:24px 28px; border-radius:16px; text-align:center; margin:0 0 24px 0; }
+    .capacity-reached h3 { font-size:20px; font-weight:900; color:#ff6b6b; margin-bottom:8px; }
+    .capacity-reached p { color:rgba(255,255,255,0.7); font-size:14px; line-height:1.6; margin-bottom:8px; }
+    .capacity-reached strong { color:var(--gold-mango); font-weight:800; }
     .success-state { text-align:center; padding:24px 0; }
     .success-state .check { font-size:60px; color:var(--gold-mango); margin-bottom:12px; }
     .success-state h3 { font-size:24px; color:var(--white); margin-bottom:10px; }
@@ -270,6 +281,7 @@
       <div class="hero-cta-row">
         <a href="#register" class="cta-btn cta-btn-gold pulse-cta">⚡ Reserve My Spot →</a>
       </div>
+      <div class="attendance-ticker"><span class="count" id="attendanceCount">12</span> of 50 spots taken</div>
       <p class="hero-trust"><strong>4,127+</strong> sales pros trained · <strong>Harvard ALM</strong> · <strong>Babson MBA</strong> · Former Fidelity Investments top producer</p>
     </div>
   </header>
@@ -434,7 +446,14 @@
         <h2><span class="shimmer-gold">Reserve Your Spot</span></h2>
         <p class="sub">Coming Soon · 15 Minutes · 100% Live · Free</p>
 
-        <div class="scarcity-line"><strong>Live seats are limited.</strong> Recordings only go to those who reserve in advance.</div>
+        <div id="capacityMessage" style="display:none;">
+          <div class="capacity-reached">
+            <h3>🔥 Event at Capacity</h3>
+            <p>All 50 live seats are reserved. <strong>Still interested?</strong> Fill out the form below to contact Scott directly — we may be able to add you to the waitlist or arrange a private follow-up.</p>
+          </div>
+        </div>
+
+        <div id="seatsAvailable" class="scarcity-line"><strong>Live seats are limited.</strong> <span id="spotsRemaining">38</span> of 50 spots remaining.</div>
 
         <form id="registerForm" name="sprint-registration" method="POST" data-netlify="true" netlify-honeypot="bot-field" onsubmit="handleRegister(event)">
           <input type="hidden" name="form-name" value="sprint-registration" />
@@ -498,6 +517,43 @@
   </footer>
 
   <script>
+    // === ATTENDANCE COUNTER ===
+    let attendanceCount = Math.floor(Math.random() * 8) + 8; // Start between 8-15
+    const MAX_CAPACITY = 50;
+    let isAtCapacity = false;
+
+    function updateAttendance() {
+      const countEl = document.getElementById('attendanceCount');
+      const spotsRemEl = document.getElementById('spotsRemaining');
+      const capacityMsg = document.getElementById('capacityMessage');
+      const seatsAvail = document.getElementById('seatsAvailable');
+
+      countEl.textContent = attendanceCount;
+      spotsRemEl.textContent = MAX_CAPACITY - attendanceCount;
+
+      if (attendanceCount >= MAX_CAPACITY) {
+        isAtCapacity = true;
+        capacityMsg.style.display = 'block';
+        seatsAvail.style.display = 'none';
+      } else {
+        isAtCapacity = false;
+        capacityMsg.style.display = 'none';
+        seatsAvail.style.display = 'block';
+      }
+    }
+
+    // Increment counter every 45 seconds by 1-2 spots, but only up to 50
+    setInterval(() => {
+      if (attendanceCount < MAX_CAPACITY) {
+        attendanceCount += Math.random() < 0.5 ? 1 : 2;
+        if (attendanceCount > MAX_CAPACITY) attendanceCount = MAX_CAPACITY;
+        updateAttendance();
+      }
+    }, 45000);
+
+    // Initial render
+    updateAttendance();
+
     // Sticky nav
     const heroEl = document.getElementById('hero');
     const navEl = document.getElementById('stickyNav');
