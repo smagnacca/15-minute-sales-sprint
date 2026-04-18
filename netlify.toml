@@ -1,5 +1,9 @@
 [build]
   publish = "src"
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
 
 [[headers]]
   for = "/*"
@@ -7,3 +11,9 @@
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/downloads/*.pdf"
+  [headers.values]
+    Content-Disposition = "inline; filename=\"Storyselling-Chapter-1.pdf\""
+    Cache-Control = "public, max-age=86400"

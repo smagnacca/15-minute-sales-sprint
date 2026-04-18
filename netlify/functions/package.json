@@ -1,0 +1,8 @@
+{
+  "name": "sprint-functions",
+  "private": true,
+  "type": "commonjs",
+  "dependencies": {
+    "@sendgrid/mail": "^8.1.0"
+  }
+}
