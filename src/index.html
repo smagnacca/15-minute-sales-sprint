@@ -236,6 +236,12 @@
     .success-state p { color:rgba(255,255,255,0.75); font-size:15px; line-height:1.6; }
     .success-state p strong { color:var(--gold-mango); }
 
+    /* === Social Proof Toast === */
+    .proof-toast { position:fixed; bottom:20px; left:20px; background:rgba(13,21,38,0.95); border:1px solid rgba(238,175,0,0.35); backdrop-filter:blur(16px); border-radius:14px; padding:16px 20px; color:var(--white); font-size:14px; font-weight:600; z-index:500; animation:toast-slide-in 0.4s cubic-bezier(0.34,1.56,0.64,1), toast-slide-out 0.3s cubic-bezier(0.6,-0.28,0.735,0.045) 4.7s forwards; box-shadow:0 16px 48px rgba(0,0,0,0.4); }
+    @keyframes toast-slide-in { from { transform:translateX(-120px); opacity:0; } to { transform:translateX(0); opacity:1; } }
+    @keyframes toast-slide-out { from { transform:translateX(0); opacity:1; } to { transform:translateX(-120px); opacity:0; } }
+    .proof-toast .check { color:var(--gold-mango); font-weight:800; margin-right:8px; }
+
     /* === Footer === */
     .footer { background:var(--dark-forest); color:rgba(255,255,255,0.55); padding:50px 0 40px; text-align:center; border-top:1px solid var(--dark-border); }
     .footer p { font-size:13px; margin-bottom:8px; }
@@ -566,6 +572,74 @@
       entries.forEach(x => { if (x.isIntersecting) x.target.classList.add('visible'); });
     }, { threshold: 0.1 });
     document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+
+    // === SOCIAL PROOF TOASTS ===
+    const firstNames = ['Sarah', 'Michael', 'Emily', 'David', 'Jennifer', 'Chris', 'Amanda', 'Robert', 'Nicole', 'James', 'Lisa', 'Mark', 'Jessica', 'John', 'Rachel', 'Thomas', 'Lauren', 'Daniel', 'Susan', 'Kevin'];
+    const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez', 'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Thomas', 'Taylor', 'Moore', 'Jackson', 'Martin'];
+    const cities = [
+      { name: 'New York', state: 'NY' },
+      { name: 'Los Angeles', state: 'CA' },
+      { name: 'Chicago', state: 'IL' },
+      { name: 'Houston', state: 'TX' },
+      { name: 'Phoenix', state: 'AZ' },
+      { name: 'Philadelphia', state: 'PA' },
+      { name: 'San Antonio', state: 'TX' },
+      { name: 'San Diego', state: 'CA' },
+      { name: 'Dallas', state: 'TX' },
+      { name: 'San Jose', state: 'CA' },
+      { name: 'Austin', state: 'TX' },
+      { name: 'Jacksonville', state: 'FL' },
+      { name: 'Fort Worth', state: 'TX' },
+      { name: 'Columbus', state: 'OH' },
+      { name: 'Charlotte', state: 'NC' },
+      { name: 'San Francisco', state: 'CA' },
+      { name: 'Indianapolis', state: 'IN' },
+      { name: 'Seattle', state: 'WA' },
+      { name: 'Denver', state: 'CO' },
+      { name: 'Boston', state: 'MA' },
+      { name: 'Miami', state: 'FL' },
+      { name: 'Atlanta', state: 'GA' },
+      { name: 'Portland', state: 'OR' },
+      { name: 'Nashville', state: 'TN' },
+      { name: 'Detroit', state: 'MI' },
+      { name: 'Minneapolis', state: 'MN' },
+      { name: 'Phoenix', state: 'AZ' },
+      { name: 'Cleveland', state: 'OH' },
+      { name: 'New Orleans', state: 'LA' },
+      { name: 'Tampa', state: 'FL' },
+      { name: 'Las Vegas', state: 'NV' },
+      { name: 'Baltimore', state: 'MD' },
+      { name: 'Orlando', state: 'FL' },
+      { name: 'Memphis', state: 'TN' },
+      { name: 'Louisville', state: 'KY' },
+      { name: 'Milwaukee', state: 'WI' },
+      { name: 'Albuquerque', state: 'NM' },
+      { name: 'Tucson', state: 'AZ' },
+      { name: 'Fresno', state: 'CA' },
+      { name: 'Sacramento', state: 'CA' }
+    ];
+
+    function showProofToast() {
+      const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+      const city = cities[Math.floor(Math.random() * cities.length)];
+      const toast = document.createElement('div');
+      toast.className = 'proof-toast';
+      toast.innerHTML = `<span class="check">✓</span><strong>${firstName}</strong> from ${city.name}, ${city.state} just registered`;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 5000);
+    }
+
+    // Show social proof toast every 15-25 seconds
+    function scheduleNextToast() {
+      const delay = Math.floor(Math.random() * 10000) + 15000; // 15-25 seconds
+      setTimeout(() => {
+        if (attendanceCount < MAX_CAPACITY) {
+          showProofToast();
+          scheduleNextToast();
+        }
+      }, delay);
+    }
+    scheduleNextToast();
 
     // Form submit — Netlify Form via fetch (stays on page, shows success)
     function handleRegister(e) {
