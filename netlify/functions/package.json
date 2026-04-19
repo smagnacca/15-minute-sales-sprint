@@ -4,6 +4,7 @@
   "type": "commonjs",
   "dependencies": {
     "@netlify/blobs": "^10.7.4",
-    "@sendgrid/mail": "^8.1.0"
+    "@sendgrid/mail": "^8.1.0",
+    "googleapis": "^144.0.0"
   }
 }

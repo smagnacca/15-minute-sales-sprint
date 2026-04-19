@@ -1,5 +1,65 @@
 const sgMail = require('@sendgrid/mail');
 const { getStore } = require('@netlify/blobs');
+const { google } = require('googleapis');
+
+const OUTREACH_SHEET_ID = '1RHtpqWJMbQPhTTBzF2HU5hzg9SISutY_m40UU_vCleE';
+const OUTREACH_TAB = '15-min-sprint';
+
+async function appendToOutreachSheet({ firstName, lastName, email, company, role, city, state }) {
+  try {
+    const raw = process.env.GOOGLE_SERVICE_ACCOUNT_JSON;
+    if (!raw) { console.warn('GOOGLE_SERVICE_ACCOUNT_JSON not set; skipping outreach sheet append'); return; }
+    const credentials = JSON.parse(raw);
+    const auth = new google.auth.GoogleAuth({
+      credentials,
+      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+    });
+    const sheets = google.sheets({ version: 'v4', auth });
+    const nowEt = new Date().toLocaleString('en-US', {
+      timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false,
+    }).replace(',', '');
+
+    // Dedup by email (col D)
+    const existing = await sheets.spreadsheets.values.get({
+      spreadsheetId: OUTREACH_SHEET_ID,
+      range: `${OUTREACH_TAB}!D2:D`,
+    });
+    const rows = (existing.data.values || []).map(r => (r[0] || '').trim().toLowerCase());
+    const emailLc = email.toLowerCase();
+    const matchIndex = rows.indexOf(emailLc);
+
+    const rowValues = [nowEt, firstName, lastName, email, company, role, city, state, '15-min-sales-sprint', 'New'];
+
+    if (matchIndex >= 0) {
+      const rowNumber = matchIndex + 2;
+      // Preserve existing Status
+      const statusRes = await sheets.spreadsheets.values.get({
+        spreadsheetId: OUTREACH_SHEET_ID,
+        range: `${OUTREACH_TAB}!J${rowNumber}`,
+      });
+      const existingStatus = (statusRes.data.values && statusRes.data.values[0] && statusRes.data.values[0][0]) || 'New';
+      rowValues[9] = existingStatus;
+      await sheets.spreadsheets.values.update({
+        spreadsheetId: OUTREACH_SHEET_ID,
+        range: `${OUTREACH_TAB}!A${rowNumber}:J${rowNumber}`,
+        valueInputOption: 'USER_ENTERED',
+        requestBody: { values: [rowValues] },
+      });
+      console.log(`Outreach sheet: updated row ${rowNumber} for ${email}`);
+    } else {
+      await sheets.spreadsheets.values.append({
+        spreadsheetId: OUTREACH_SHEET_ID,
+        range: `${OUTREACH_TAB}!A:J`,
+        valueInputOption: 'USER_ENTERED',
+        requestBody: { values: [rowValues] },
+      });
+      console.log(`Outreach sheet: appended row for ${email}`);
+    }
+  } catch (err) {
+    console.error('Outreach sheet append failed:', err.message || err);
+  }
+}
 
 const REGISTRATIONS_KEY = 'recent-registrations';
 const MAX_STORED_REGISTRATIONS = 50;
@@ -183,11 +243,17 @@ exports.handler = async (event) => {
     const firstName = (data.firstName || '').trim();
     const lastName = (data.lastName || '').trim();
     const company = (data.company || '').trim();
+    const role = (data.role || '').trim();
     const city = (data.city || '').trim();
     const state = (data.state || '').trim();
 
     // Store registration for social proof toasts (firstName + city only — no PII)
     await appendRegistration({ firstName, city, state });
+
+    // Pipe lead into Outreach Machine sheet. Never block registration on failure.
+    if (email) {
+      await appendToOutreachSheet({ firstName, lastName, email, company, role, city, state });
+    }
 
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       console.warn('Invalid or missing email; skipping send. data:', JSON.stringify(data));
