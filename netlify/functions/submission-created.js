@@ -37,7 +37,6 @@ function escapeHtml(s) {
 
 function buildHtml({ firstName, company }) {
   const name = escapeHtml(firstName) || 'there';
-  const co = company ? ` at ${escapeHtml(company)}` : '';
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -53,23 +52,33 @@ function buildHtml({ firstName, company }) {
 
         <!-- Header -->
         <tr><td style="background:linear-gradient(135deg,#080D1A 0%,#0D2045 50%,#1A3A6B 100%);padding:40px 32px;text-align:center;">
-          <div style="font-size:17px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:#EEAF00;margin-bottom:10px;">The 15 Minute Sales Sprint</div>
+          <div style="font-size:17px;font-weight:800;letter-spacing:0.10em;text-transform:uppercase;color:#EEAF00;margin-bottom:10px;white-space:nowrap;">The 15 Minute Sales Sprint</div>
           <div style="font-family:Georgia,serif;font-style:italic;font-size:23px;color:#FFF8E1;line-height:1.3;">One idea. 15 minutes. A better sales career.</div>
         </td></tr>
 
         <!-- Greeting -->
         <tr><td style="padding:36px 36px 8px;">
           <h1 style="margin:0 0 12px;font-size:28px;font-weight:900;color:#1A2040;letter-spacing:-0.02em;line-height:1.2;">You're in, ${name}.</h1>
-          <p style="margin:0 0 18px;font-size:16px;line-height:1.6;color:#4B5563;">Thanks for reserving your spot${co}. Your seat at the next <strong style="color:#1A2040;">15 Minute Sales Sprint</strong> is locked in.</p>
+          <p style="margin:0 0 22px;font-size:16px;line-height:1.6;color:#4B5563;">Thanks for reserving your spot at our exclusive event. Your seat at the next <strong style="color:#1A2040;">15 Minute Sales Sprint</strong> is locked in.</p>
+        </td></tr>
+
+        <!-- Teaser: why this matters -->
+        <tr><td style="padding:0 36px 8px;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:linear-gradient(135deg,#F8FAFD 0%,#EEF3F9 100%);border-left:4px solid #EEAF00;border-radius:10px;">
+            <tr><td style="padding:22px 24px;">
+              <p style="margin:0 0 10px;font-family:Georgia,serif;font-style:italic;font-size:18px;line-height:1.5;color:#1A2040;">Imagine reaching <strong style="font-style:normal;color:#1A3A6B;">135 million professionals</strong> — every single day.</p>
+              <p style="margin:0 0 10px;font-size:15px;line-height:1.6;color:#4B5563;">What if you knew how to engage the right ones — so <em>they</em> ask to connect with <em>you</em>?</p>
+              <p style="margin:0;font-size:16px;line-height:1.55;color:#1A2040;font-weight:700;">That's the power of LinkedIn + one simple AI move. We'll show you live.</p>
+            </td></tr>
+          </table>
         </td></tr>
 
         <!-- What happens next -->
         <tr><td style="padding:0 36px 12px;">
           <div style="font-size:15px;font-weight:900;text-transform:uppercase;letter-spacing:0.14em;color:#1A2040;margin-bottom:14px;">What happens next</div>
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px solid #E2E8F0;border-radius:12px;background:#FAFBFD;">
-            <tr><td style="padding:14px 18px;border-bottom:1px solid #E2E8F0;font-size:14px;color:#4B5563;line-height:1.55;"><span style="color:#EEAF00;font-weight:900;margin-right:8px;">→</span><strong style="color:#1A2040;">Within 5 minutes:</strong> This confirmation lands in your inbox (you're reading it 😊)</td></tr>
-            <tr><td style="padding:14px 18px;border-bottom:1px solid #E2E8F0;font-size:14px;color:#4B5563;line-height:1.55;"><span style="color:#EEAF00;font-weight:900;margin-right:8px;">→</span><strong style="color:#1A2040;">The day before the event:</strong> You'll get the live link plus a 1-page LinkedIn playbook</td></tr>
-            <tr><td style="padding:14px 18px;font-size:14px;color:#4B5563;line-height:1.55;"><span style="color:#EEAF00;font-weight:900;margin-right:8px;">→</span><strong style="color:#1A2040;">Event day:</strong> Show up. 15 minutes. Walk away with one move you can run that afternoon.</td></tr>
+            <tr><td style="padding:14px 18px;border-bottom:1px solid #E2E8F0;font-size:15px;color:#4B5563;line-height:1.55;"><span style="color:#EEAF00;font-weight:900;margin-right:8px;">→</span><strong style="color:#1A2040;">Day before the event:</strong> Live link + 1-page LinkedIn playbook in your inbox.</td></tr>
+            <tr><td style="padding:14px 18px;font-size:15px;color:#4B5563;line-height:1.55;"><span style="color:#EEAF00;font-weight:900;margin-right:8px;">→</span><strong style="color:#1A2040;">Event day:</strong> Show up. 15 minutes. Walk away with one move you can run that afternoon.</td></tr>
           </table>
         </td></tr>
 
@@ -125,15 +134,15 @@ function buildHtml({ firstName, company }) {
 
 function buildText({ firstName, company }) {
   const name = firstName || 'there';
-  const co = company ? ` at ${company}` : '';
   return `You're in, ${name}.
 
-Thanks for reserving your spot${co}. Your seat at the next 15 Minute Sales Sprint is locked in.
+Thanks for reserving your spot at our exclusive event. Your seat at the next 15 Minute Sales Sprint is locked in.
+
+Imagine reaching 135 million professionals — every single day. What if you knew how to engage the right ones — so they ask to connect with you? That's the power of LinkedIn + one simple AI move. We'll show you live.
 
 WHAT HAPPENS NEXT
-- Within 5 minutes: this confirmation lands in your inbox (you're reading it!)
-- The day before the event: you'll get the live link plus a 1-page LinkedIn playbook
-- Event day: show up, 15 minutes, walk away with one move you can run that afternoon
+- Day before the event: live link + 1-page LinkedIn playbook in your inbox.
+- Event day: show up, 15 minutes, walk away with one move you can run that afternoon.
 
 YOUR THANK-YOU GIFT
 A preview chapter from my new book "Storyselling in the Age of AI" — yours to read before the Sprint:
