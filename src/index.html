@@ -233,7 +233,8 @@
     .outcome:nth-child(4) .verb { animation-delay:-3.5s; }
     @keyframes verb-pulse { 0% { color:var(--gold-mango); text-shadow:none; } 6% { color:#fff; text-shadow:0 0 16px rgba(255,255,255,0.8), 0 0 32px rgba(255,255,255,0.5), 0 0 48px rgba(255,255,255,0.3); } 8% { color:var(--gold-mango); text-shadow:none; } 100% { color:var(--gold-mango); text-shadow:none; } }
     .outcome p { font-size:15px; color:rgba(255,255,255,0.82); line-height:1.55; }
-    .reciprocity { max-width:720px; margin:0 auto; text-align:center; padding:28px 32px; background:rgba(238,175,0,0.08); border:1px solid rgba(238,175,0,0.3); border-radius:16px; font-size:17px; color:var(--gold-cream); font-family:var(--font-accent); font-style:italic; }
+    .reciprocity { max-width:720px; margin:0 auto; text-align:center; padding:28px 32px; background:rgba(238,175,0,0.08); border:1px solid rgba(238,175,0,0.3); border-radius:16px; font-size:17px; color:var(--gold-cream); font-family:var(--font-accent); font-style:italic; animation:gold-border-pulse 6s ease-in-out infinite; box-shadow:0 0 0 0 rgba(238,175,0,0); }
+    @keyframes gold-border-pulse { 0% { border-color:rgba(238,175,0,0.3); box-shadow:0 0 0 0 rgba(238,175,0,0), inset 0 0 0 0 rgba(238,175,0,0); } 50% { border-color:rgba(238,175,0,0.8); box-shadow:0 0 20px 0 rgba(238,175,0,0.6), inset 0 0 20px 0 rgba(238,175,0,0.2); } 100% { border-color:rgba(238,175,0,0.3); box-shadow:0 0 0 0 rgba(238,175,0,0), inset 0 0 0 0 rgba(238,175,0,0); } }
     .reciprocity strong { color:var(--gold-mango); font-weight:800; font-style:normal; font-family:var(--font-body); }
 
     /* === Worth Section (Stats + Testimonials) === */
