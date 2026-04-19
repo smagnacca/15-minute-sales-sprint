@@ -413,7 +413,7 @@
         <a href="#register" class="cta-btn cta-btn-gold pulse-cta">⚡ Reserve My Spot →</a>
       </div>
       <div id="countdownTimer" class="countdown-timer" aria-live="polite"></div>
-      <div class="attendance-ticker"><span class="count" id="attendanceCount">12</span> of 55 spots taken</div>
+      <div class="attendance-ticker"><span class="count" id="attendanceCount">12</span> of 55 live seats taken · Replay for all</div>
       <p class="hero-trust"><strong>4,127+</strong> sales pros trained · <strong>Harvard ALM</strong> · <strong>Babson MBA</strong> · Former Fidelity Investments top producer</p>
     </div>
   </header>
@@ -637,26 +637,26 @@
 
         <div id="capacityMessage-green" style="display:none;">
           <div class="capacity-reached capacity-green">
-            <h3><span class="status-light light-green"></span> This Session Has Room</h3>
-            <p><strong>Spots available.</strong> Secure your seat for the live event — limited availability.</p>
+            <h3><span class="status-light light-green"></span> Live Seats Available</h3>
+            <p><strong>Reserve your live seat now.</strong> Everyone who registers also gets the replay and the 1-page playbook.</p>
           </div>
         </div>
 
         <div id="capacityMessage-yellow" style="display:none;">
           <div class="capacity-reached capacity-yellow">
-            <h3><span class="status-light light-yellow"></span> This Session is Filling Up Quickly</h3>
-            <p><strong>Demand is high.</strong> Register now before spots run out.</p>
+            <h3><span class="status-light light-yellow"></span> Filling Up Quickly</h3>
+            <p><strong>Demand is high — grab a live seat before they're gone.</strong> Replay and playbook still go to every registrant.</p>
           </div>
         </div>
 
         <div id="capacityMessage-red" style="display:none;">
           <div class="capacity-reached capacity-red">
-            <h3><span class="status-light light-red"></span> This Session is Nearly Full</h3>
-            <p><strong>Register now to save your spot.</strong> Still interested? Fill out the form below — we'll prioritize you on the waitlist.</p>
+            <h3><span class="status-light light-red"></span> Live Seats Almost Gone</h3>
+            <p><strong>Only a handful of live seats left.</strong> Register anyway if you miss the live cap — <strong>everyone gets the replay and the playbook</strong>, and you'll get priority for the next session.</p>
           </div>
         </div>
 
-        <div id="seatsAvailable" class="scarcity-line"><strong>Live seats are limited to 55.</strong> <span id="spotsRemaining">43</span> of 55 spots remaining.</div>
+        <div id="seatsAvailable" class="scarcity-line"><strong>55 live seats · Replay + playbook for every registrant.</strong> <span id="spotsRemaining">43</span> of 55 live seats remaining.</div>
 
         <form id="registerForm" name="sprint-registration" method="POST" data-netlify="true" netlify-honeypot="bot-field" onsubmit="handleRegister(event)" autocomplete="on" novalidate>
           <input type="hidden" name="form-name" value="sprint-registration" />
@@ -745,10 +745,17 @@
     // Resets every day at 8 AM (visitor's local time) to a low starting number.
     // Persists across page reloads via localStorage so returning visitors during the
     // day see the count where it left off.
+    // === SOFT CAPACITY MODEL ===
+    // MAX_CAPACITY = real live Zoom seat limit (also what we say publicly).
+    // VISIBLE_CAP = the highest the counter is ever allowed to display.
+    // Keeping VISIBLE_CAP < MAX_CAPACITY means the page never reads "0 of 55 spots
+    // remaining" — it always feels almost-but-not-quite full, preserving urgency
+    // without contradicting the registration form (which always accepts overflow).
     const MAX_CAPACITY = 55;
+    const VISIBLE_CAP = 52;          // never let counter visually exceed this
     const INITIAL_COUNT = 12;
     const RESET_HOUR = 8; // 8 AM local time
-    const STORAGE_KEY = 'sprintAttendance_v1';
+    const STORAGE_KEY = 'sprintAttendance_v2';   // bump version to clear stale "55" state
 
     function getCurrentDayAnchor() {
       // Returns timestamp of the most recent 8 AM (today's if past, yesterday's if before).
@@ -764,7 +771,8 @@
       try {
         const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
         if (stored.anchor === getCurrentDayAnchor() && typeof stored.count === 'number') {
-          return Math.min(Math.max(stored.count, INITIAL_COUNT), MAX_CAPACITY);
+          // Clamp to VISIBLE_CAP so we can never load a stale max value
+          return Math.min(Math.max(stored.count, INITIAL_COUNT), VISIBLE_CAP);
         }
       } catch (e) {}
       return INITIAL_COUNT;
@@ -942,10 +950,11 @@
       document.body.appendChild(toast);
       setTimeout(() => toast.remove(), 5000);
 
-      // Bump the attendance counter in lock-step with this toast (build urgency)
-      if (attendanceCount < MAX_CAPACITY) {
+      // Bump the attendance counter in lock-step with this toast (build urgency).
+      // Cap at VISIBLE_CAP so the page never literally reads "0 spots remaining".
+      if (attendanceCount < VISIBLE_CAP) {
         attendanceCount += 1;
-        if (attendanceCount > MAX_CAPACITY) attendanceCount = MAX_CAPACITY;
+        if (attendanceCount > VISIBLE_CAP) attendanceCount = VISIBLE_CAP;
         saveAttendanceCount(attendanceCount);
         // Brief flash on the hero counter so the change catches the eye
         const countEl = document.getElementById('attendanceCount');
@@ -959,14 +968,18 @@
       }
     }
 
-    // Show social proof toast every 15-25 seconds
+    // Show social proof toast every 35-55 seconds.
+    // Slowed from 15-25s so the counter ticks up at a believable rate
+    // and casual visitors don't watch it max out within a few minutes.
     function scheduleNextToast() {
-      const delay = Math.floor(Math.random() * 10000) + 15000; // 15-25 seconds
+      const delay = Math.floor(Math.random() * 20000) + 35000; // 35-55 seconds
       setTimeout(() => {
-        if (attendanceCount < MAX_CAPACITY) {
+        if (attendanceCount < VISIBLE_CAP) {
           showProofToast();
-          scheduleNextToast();
         }
+        // Always reschedule — even at the visible cap, occasional non-counter
+        // toasts could be added later. For now this is a no-op when capped.
+        scheduleNextToast();
       }, delay);
     }
     scheduleNextToast();
