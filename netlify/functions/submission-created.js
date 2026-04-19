@@ -52,9 +52,9 @@ function buildHtml({ firstName, company }) {
       <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background:#FFFFFF;border-radius:18px;overflow:hidden;box-shadow:0 12px 40px rgba(8,13,26,0.08);">
 
         <!-- Header -->
-        <tr><td style="background:linear-gradient(135deg,#080D1A 0%,#0D2045 50%,#1A3A6B 100%);padding:36px 32px;text-align:center;">
-          <div style="font-size:13px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:#EEAF00;margin-bottom:8px;">The 15 Minute Sales Sprint</div>
-          <div style="font-family:Georgia,serif;font-style:italic;font-size:18px;color:#FFF8E1;">One idea. 15 minutes. A better sales career.</div>
+        <tr><td style="background:linear-gradient(135deg,#080D1A 0%,#0D2045 50%,#1A3A6B 100%);padding:40px 32px;text-align:center;">
+          <div style="font-size:17px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;color:#EEAF00;margin-bottom:10px;">The 15 Minute Sales Sprint</div>
+          <div style="font-family:Georgia,serif;font-style:italic;font-size:23px;color:#FFF8E1;line-height:1.3;">One idea. 15 minutes. A better sales career.</div>
         </td></tr>
 
         <!-- Greeting -->
@@ -65,7 +65,7 @@ function buildHtml({ firstName, company }) {
 
         <!-- What happens next -->
         <tr><td style="padding:0 36px 12px;">
-          <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.12em;color:#1A3A6B;margin-bottom:12px;">What happens next</div>
+          <div style="font-size:15px;font-weight:900;text-transform:uppercase;letter-spacing:0.14em;color:#1A2040;margin-bottom:14px;">What happens next</div>
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px solid #E2E8F0;border-radius:12px;background:#FAFBFD;">
             <tr><td style="padding:14px 18px;border-bottom:1px solid #E2E8F0;font-size:14px;color:#4B5563;line-height:1.55;"><span style="color:#EEAF00;font-weight:900;margin-right:8px;">→</span><strong style="color:#1A2040;">Within 5 minutes:</strong> This confirmation lands in your inbox (you're reading it 😊)</td></tr>
             <tr><td style="padding:14px 18px;border-bottom:1px solid #E2E8F0;font-size:14px;color:#4B5563;line-height:1.55;"><span style="color:#EEAF00;font-weight:900;margin-right:8px;">→</span><strong style="color:#1A2040;">The day before the event:</strong> You'll get the live link plus a 1-page LinkedIn playbook</td></tr>
@@ -77,10 +77,19 @@ function buildHtml({ firstName, company }) {
         <tr><td style="padding:32px 36px 8px;">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:linear-gradient(135deg,#FFFDF5 0%,#FFF8E1 100%);border:1.5px solid rgba(238,175,0,0.4);border-radius:16px;">
             <tr><td style="padding:28px 28px 24px;">
-              <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.12em;color:#AD9001;margin-bottom:8px;">📖 Your Thank-You Gift</div>
-              <h2 style="margin:0 0 8px;font-size:22px;font-weight:900;color:#1A2040;letter-spacing:-0.01em;line-height:1.25;">Chapter 1 of <em style="font-family:Georgia,serif;color:#1A3A6B;">Storyselling in the Age of AI</em></h2>
-              <p style="margin:0 0 20px;font-size:14px;line-height:1.6;color:#4B5563;">A preview chapter from my new book — yours to read before the Sprint. It pairs perfectly with what we'll cover live.</p>
-              <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td style="background:linear-gradient(90deg,#EEAF00 0%,#DDD055 50%,#EEAF00 100%);border-radius:12px;">
+              <div style="font-size:15px;font-weight:900;text-transform:uppercase;letter-spacing:0.14em;color:#1A2040;margin-bottom:14px;">📖 Your Thank-You Gift</div>
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="vertical-align:top;padding-right:18px;width:110px;">
+                    <img src="${SITE_URL}/img/Storyselling.jpg" alt="Storyselling in the Age of AI book cover" width="100" style="display:block;width:100px;height:auto;border-radius:6px;box-shadow:0 4px 14px rgba(238,175,0,0.25);" />
+                  </td>
+                  <td style="vertical-align:top;">
+                    <h2 style="margin:0 0 8px;font-size:22px;font-weight:900;color:#1A2040;letter-spacing:-0.01em;line-height:1.25;">Chapter 1 of <em style="font-family:Georgia,serif;color:#1A3A6B;">Storyselling in the Age of AI</em></h2>
+                    <p style="margin:0 0 18px;font-size:14px;line-height:1.6;color:#4B5563;">A preview chapter from my new book — yours to read before the Sprint. It pairs perfectly with what we'll cover live.</p>
+                  </td>
+                </tr>
+              </table>
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-top:6px;"><tr><td style="background:linear-gradient(90deg,#EEAF00 0%,#DDD055 50%,#EEAF00 100%);border-radius:12px;">
                 <a href="${CHAPTER_URL}" style="display:inline-block;padding:16px 28px;font-size:15px;font-weight:800;color:#080D1A;text-decoration:none;letter-spacing:0.01em;">📖 Download Chapter 1 →</a>
               </td></tr></table>
               <p style="margin:14px 0 0;font-size:12px;color:#6B7280;">PDF · 17 pages · 700 KB</p>
@@ -92,7 +101,7 @@ function buildHtml({ firstName, company }) {
         <tr><td style="padding:32px 36px 36px;">
           <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
             <td style="padding-right:16px;vertical-align:top;">
-              <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#1A3A6B 0%,#2855A0 100%);color:#EEAF00;font-family:Georgia,serif;font-size:20px;font-weight:900;line-height:56px;text-align:center;border:2px solid #EEAF00;">SM</div>
+              <img src="${SITE_URL}/img/scott.jpg" alt="Scott Magnacca" width="56" height="56" style="display:block;width:56px;height:56px;border-radius:50%;border:2px solid #EEAF00;object-fit:cover;object-position:center top;" />
             </td>
             <td style="vertical-align:top;">
               <div style="font-size:15px;color:#1A2040;line-height:1.55;">See you live,<br/><strong style="color:#1A3A6B;">Scott Magnacca</strong></div>
