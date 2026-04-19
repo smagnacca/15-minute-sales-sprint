@@ -151,7 +151,19 @@
     .event-masthead { display:block; font-size:22px; font-weight:900; letter-spacing:0.18em; text-transform:uppercase; margin-bottom:14px; animation:masthead-pulse 3s ease-in-out 1s infinite; }
     .hero-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(238,175,0,0.12); border:1.5px solid rgba(238,175,0,0.45); border-radius:40px; padding:9px 20px; font-size:12px; font-weight:800; color:var(--gold-mango); text-transform:uppercase; letter-spacing:0.12em; margin-bottom:28px; animation:float-badge 3.6s ease-in-out infinite; }
     .hero-badge .pulse-dot { width:9px; height:9px; background:#22c55e; border-radius:50%; animation:blink-dot 1.6s infinite; }
-    .hero-tagline { display:block; font-family:var(--font-accent); font-style:italic; font-size:clamp(20px,3vw,28px); margin-bottom:24px; background:linear-gradient(90deg,rgba(255,248,225,0.65) 0%,rgba(255,248,225,0.65) 35%,#fff 50%,rgba(255,248,225,0.65) 65%,rgba(255,248,225,0.65) 100%); background-size:250% 100%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; animation:tagline-wave 5s ease-in-out infinite; }
+    .hero-tagline { display:block; font-family:var(--font-accent); font-style:italic; font-size:clamp(20px,3vw,28px); margin-bottom:24px; color:#fff; }
+    /* Sequential phrase pulse: "One bold AI idea." flashes sky blue, then "15 focused minutes." flashes gold,
+       then 10s pause, repeat. Both spans share the same 13s cycle so they stay in lock-step. */
+    @keyframes phrase-pulse-blue {
+      0%, 12%, 100% { color:#fff; text-shadow:none; }
+      6% { color:#38BDF8; text-shadow:0 0 24px rgba(56,189,248,0.95), 0 0 56px rgba(56,189,248,0.55), 0 0 90px rgba(56,189,248,0.25); }
+    }
+    @keyframes phrase-pulse-gold {
+      0%, 12%, 24%, 100% { color:#fff; text-shadow:none; }
+      18% { color:var(--gold-mango); text-shadow:0 0 24px rgba(238,175,0,0.95), 0 0 56px rgba(238,175,0,0.55), 0 0 90px rgba(238,175,0,0.25); }
+    }
+    .tagline-blue { animation:phrase-pulse-blue 13s ease-in-out infinite; }
+    .tagline-gold { animation:phrase-pulse-gold 13s ease-in-out infinite; }
     .hero h1 { font-size:clamp(40px, 6.5vw, 76px); font-weight:900; line-height:1.05; margin-bottom:28px; max-width:920px; margin-left:auto; margin-right:auto; }
     .hero h1 .min-flash { animation:minutes-flash 8s ease-in-out 2s infinite; display:inline-block; }
     .hero-subtitle { font-size:clamp(17px,2vw,21px); line-height:1.55; color:rgba(255,255,255,0.82); margin:0 auto 38px; max-width:680px; }
@@ -327,7 +339,7 @@
     <div class="container">
       <span class="event-masthead">Practical AI · Live · 15 Minutes</span>
       <div class="hero-badge"><span class="pulse-dot"></span> Coming Soon — Reserve Your Spot</div>
-      <span class="hero-tagline">One bold AI idea. 15 focused minutes.</span>
+      <span class="hero-tagline"><span class="tagline-blue">One bold AI idea.</span> <span class="tagline-gold">15 focused minutes.</span></span>
       <h1>Boost Your <span class="min-flash">Productivity, Profits</span><br/>and Performance.</h1>
       <p class="hero-subtitle"><strong>One powerful AI sales idea.</strong> A free live micro-event for <strong>salespeople and sales-adjacent pros</strong> who don't have time to waste. Apply it the same day.</p>
       <div class="hero-cta-row">
