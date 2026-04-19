@@ -1,10 +1,11 @@
 # Pickup Prompt — 15 Minute Sales Sprint — 2026-04-19
 
-**Branch:** main | **Last commit:** `37ef57e` — Update book section with Option 3 concept copy
+**Branch:** main | **Last commit:** `7e59d79` — Speed up social proof toasts to 15-20 second interval
 
 **Completed this session:**
 - Added book authority section below bio block: Storyselling.jpg cover + Option 3 concept copy ("AI can generate content, but only humans tell stories...")
 - Swapped testimonial avatars from text initials to real photos: tai-b.jpg (Marcus T.), farrell-d.jpg (Priya S.), troy-b.jpg (Dan R.)
+- Activated social proof toast notifications: "Tom S from Boston just registered" style messages every 15-20 seconds (floating left/right, non-blocking)
 - Created project-level CHANGELOG.md
 - Updated project memory with book section details
 
