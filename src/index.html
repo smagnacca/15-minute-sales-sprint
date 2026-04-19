@@ -992,11 +992,9 @@
       }
     }
 
-    // Show social proof toast every 35-55 seconds.
-    // Slowed from 15-25s so the counter ticks up at a believable rate
-    // and casual visitors don't watch it max out within a few minutes.
+    // Show social proof toast every 15-20 seconds.
     function scheduleNextToast() {
-      const delay = Math.floor(Math.random() * 20000) + 35000; // 35-55 seconds
+      const delay = Math.floor(Math.random() * 5000) + 15000; // 15-20 seconds
       setTimeout(() => {
         if (attendanceCount < VISIBLE_CAP) {
           showProofToast();
