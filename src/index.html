@@ -236,8 +236,10 @@
     .stats-row { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; max-width:920px; margin:0 auto 64px; }
     .stat-card { background:var(--light-card); border:1px solid var(--light-border); border-top:4px solid var(--gold-mango); border-radius:18px; padding:34px 24px; text-align:center; transition:transform 0.3s, box-shadow 0.3s; }
     .stat-card:hover { transform:translateY(-4px); box-shadow:0 12px 36px rgba(238,175,0,0.18); }
-    .stat-num { font-size:clamp(40px,5vw,58px); font-weight:900; color:var(--green-deep); line-height:1; display:block; margin-bottom:8px; font-variant-numeric:tabular-nums; }
-    .stat-num .gold { color:var(--gold-mango); }
+    .stat-num { font-size:clamp(40px,5vw,58px); font-weight:900; color:#000; line-height:1; display:block; margin-bottom:8px; font-variant-numeric:tabular-nums; }
+    .stat-num .gold { color:var(--green-deep); }
+    .stat-counter { display:inline-block; min-width:1.2em; }
+    @keyframes count-up { from { opacity:0.5; transform:scale(0.95); } to { opacity:1; transform:scale(1); } }
     .stat-label { font-size:13px; color:var(--text-secondary); font-weight:600; line-height:1.4; }
     .testimonials { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; max-width:1000px; margin:0 auto; }
     .t-card { background:var(--light-card); border:1px solid var(--light-border); border-radius:18px; padding:30px 26px; transition:transform 0.3s, box-shadow 0.3s; }
@@ -468,11 +470,11 @@
           <div class="stat-label">Ad spend required.<br/>Zero tools to buy.</div>
         </div>
         <div class="stat-card fade-in">
-          <span class="stat-num">10<span class="gold">min</span></span>
+          <span class="stat-num"><span class="stat-counter" data-target="10">0</span><span class="gold">min</span></span>
           <div class="stat-label">A day to execute.<br/>Done before coffee #2.</div>
         </div>
         <div class="stat-card fade-in">
-          <span class="stat-num">78<span class="gold">%</span></span>
+          <span class="stat-num"><span class="stat-counter" data-target="78">0</span><span class="gold">%</span></span>
           <div class="stat-label">Of B2B buyers research on LinkedIn before they ever talk to a rep.</div>
         </div>
       </div>
@@ -820,6 +822,43 @@
         }
       });
     });
+
+    // === COUNT-UP ANIMATION ===
+    function animateCounter(element, target) {
+      const duration = 2000; // 2 seconds
+      const start = Date.now();
+      const initialValue = parseInt(element.textContent) || 0;
+
+      function update() {
+        const elapsed = Date.now() - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const current = Math.floor(initialValue + (target - initialValue) * progress);
+        element.textContent = current;
+        element.style.animation = 'count-up 0.3s ease-out';
+
+        if (progress < 1) {
+          requestAnimationFrame(update);
+        } else {
+          element.textContent = target;
+        }
+      }
+      update();
+    }
+
+    // Observe stat counters and animate on scroll into view
+    const counterElements = document.querySelectorAll('.stat-counter');
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !entry.target.dataset.animated) {
+          const target = parseInt(entry.target.dataset.target);
+          animateCounter(entry.target, target);
+          entry.target.dataset.animated = 'true';
+          counterObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    counterElements.forEach(el => counterObserver.observe(el));
 
     // Form submit — Netlify Form via fetch (stays on page, shows success)
     function handleRegister(e) {
