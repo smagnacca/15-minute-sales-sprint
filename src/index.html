@@ -177,8 +177,12 @@
     .what-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-bottom:60px; }
     .what-card { background:var(--light-card); border:1px solid var(--light-border); border-radius:20px; padding:36px 28px; transition:transform 0.3s, box-shadow 0.3s, border-color 0.3s; position:relative; }
     .what-card:hover { transform:translateY(-6px); box-shadow:0 16px 48px rgba(26,58,107,0.12); border-color:rgba(26,58,107,0.3); }
-    .what-card .num-tag { position:absolute; top:-14px; left:28px; background:var(--gradient-warm); color:var(--dark-forest); width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:14px; box-shadow:0 4px 12px rgba(238,175,0,0.4); }
-    .what-card .icon { font-size:32px; margin-bottom:18px; display:block; }
+    .what-card .num-tag { position:absolute; top:-14px; left:28px; background:var(--gradient-warm); color:var(--dark-forest); width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:14px; box-shadow:0 4px 12px rgba(238,175,0,0.4); z-index:3; }
+    .what-card { padding:0; overflow:hidden; }
+    .what-card-visual { position:relative; width:100%; aspect-ratio:16/10; overflow:hidden; background:linear-gradient(135deg,var(--green-pale),#E2E8F0); }
+    .what-card-visual img { width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.6s cubic-bezier(0.16,1,0.3,1); }
+    .what-card:hover .what-card-visual img { transform:scale(1.05); }
+    .what-card-body { padding:28px 28px 32px; }
     .what-card h3 { font-size:21px; font-weight:800; margin-bottom:12px; color:var(--text-dark); }
     .what-card p { font-size:15px; color:var(--text-secondary); line-height:1.6; }
 
@@ -328,7 +332,7 @@
       <div class="hero-cta-row">
         <a href="#register" class="cta-btn cta-btn-gold pulse-cta">⚡ Reserve My Spot →</a>
       </div>
-      <div class="attendance-ticker"><span class="count" id="attendanceCount">12</span> of 50 spots taken</div>
+      <div class="attendance-ticker"><span class="count" id="attendanceCount">12</span> of 75 spots taken</div>
       <p class="hero-trust"><strong>4,127+</strong> sales pros trained · <strong>Harvard ALM</strong> · <strong>Babson MBA</strong> · Former Fidelity Investments top producer</p>
     </div>
   </header>
@@ -361,21 +365,27 @@
       <div class="what-grid stagger">
         <div class="what-card fade-in">
           <span class="num-tag">1</span>
-          <span class="icon">⏱</span>
-          <h3>The Format</h3>
-          <p>15 focused minutes. Live. Free. No 90-minute slog, no "watch the replay later." Just enough to learn one move that matters — and short enough you'll actually show up.</p>
+          <div class="what-card-visual"><img src="img/format-team-call.jpg" alt="Diverse group of professionals on a video conference call shown on a desktop monitor" loading="lazy" /></div>
+          <div class="what-card-body">
+            <h3>The Format</h3>
+            <p>15 focused minutes. Live. Free. No 90-minute slog, no "watch the replay later." Just enough to learn one move that matters — and short enough you'll actually show up.</p>
+          </div>
         </div>
         <div class="what-card fade-in">
           <span class="num-tag">2</span>
-          <span class="icon">⚡</span>
-          <h3>The Promise</h3>
-          <p>One idea you can apply <strong>the same day.</strong> No "build a system," no homework, no software to buy. Walk away with a single move you can run before your next call.</p>
+          <div class="what-card-visual"><img src="img/promise-basketball.jpg" alt="Basketball going through the net — nothing but net" loading="lazy" /></div>
+          <div class="what-card-body">
+            <h3>The Promise</h3>
+            <p>One idea you can apply <strong>the same day.</strong> No "build a system," no homework, no software to buy. Walk away with a single move you can run before your next call.</p>
+          </div>
         </div>
         <div class="what-card fade-in">
           <span class="num-tag">3</span>
-          <span class="icon">📈</span>
-          <h3>Why Now</h3>
-          <p>Your competition is still <em>"researching AI"</em> and <em>"thinking about LinkedIn."</em> Every week you wait, somebody else is winning the deals you should be having. <strong>Don't fall behind.</strong></p>
+          <div class="what-card-visual"><img src="img/why-now-runner.jpg" alt="Runner crossing the finish line with arms raised in victory, leading the pack" loading="lazy" /></div>
+          <div class="what-card-body">
+            <h3>Why Now</h3>
+            <p>Your competition is still <em>"researching AI"</em> and <em>"thinking about LinkedIn."</em> Every week you wait, somebody else is winning the deals you should be having. <strong>Don't fall behind.</strong></p>
+          </div>
         </div>
       </div>
 
@@ -496,11 +506,11 @@
         <div id="capacityMessage" style="display:none;">
           <div class="capacity-reached">
             <h3>🔥 Event at Capacity</h3>
-            <p>All 50 live seats are reserved. <strong>Still interested?</strong> Fill out the form below to contact Scott directly — we may be able to add you to the waitlist or arrange a private follow-up.</p>
+            <p>All 75 live seats are reserved. <strong>Still interested?</strong> Fill out the form below to contact Scott directly — we may be able to add you to the waitlist or arrange a private follow-up.</p>
           </div>
         </div>
 
-        <div id="seatsAvailable" class="scarcity-line"><strong>Live seats are limited.</strong> <span id="spotsRemaining">38</span> of 50 spots remaining.</div>
+        <div id="seatsAvailable" class="scarcity-line"><strong>Live seats are limited.</strong> <span id="spotsRemaining">63</span> of 75 spots remaining.</div>
 
         <form id="registerForm" name="sprint-registration" method="POST" data-netlify="true" netlify-honeypot="bot-field" onsubmit="handleRegister(event)" autocomplete="on" novalidate>
           <input type="hidden" name="form-name" value="sprint-registration" />
@@ -585,8 +595,44 @@
 
   <script>
     // === ATTENDANCE COUNTER ===
-    let attendanceCount = Math.floor(Math.random() * 8) + 8; // Start between 8-15
-    const MAX_CAPACITY = 50;
+    // Resets every day at 8 AM (visitor's local time) to a low starting number.
+    // Persists across page reloads via localStorage so returning visitors during the
+    // day see the count where it left off.
+    const MAX_CAPACITY = 75;
+    const INITIAL_COUNT = 12;
+    const RESET_HOUR = 8; // 8 AM local time
+    const STORAGE_KEY = 'sprintAttendance_v1';
+
+    function getCurrentDayAnchor() {
+      // Returns timestamp of the most recent 8 AM (today's if past, yesterday's if before).
+      // All localStorage entries with this exact anchor count as "this day".
+      const now = new Date();
+      const anchor = new Date(now);
+      anchor.setHours(RESET_HOUR, 0, 0, 0);
+      if (now < anchor) anchor.setDate(anchor.getDate() - 1);
+      return anchor.getTime();
+    }
+
+    function loadAttendanceCount() {
+      try {
+        const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+        if (stored.anchor === getCurrentDayAnchor() && typeof stored.count === 'number') {
+          return Math.min(Math.max(stored.count, INITIAL_COUNT), MAX_CAPACITY);
+        }
+      } catch (e) {}
+      return INITIAL_COUNT;
+    }
+
+    function saveAttendanceCount(count) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          anchor: getCurrentDayAnchor(),
+          count: count
+        }));
+      } catch (e) {}
+    }
+
+    let attendanceCount = loadAttendanceCount();
     let isAtCapacity = false;
 
     function updateAttendance() {
@@ -611,7 +657,20 @@
 
     // Counter increments are now coupled to social-proof toasts (see scheduleNextToast below).
     // Each toast = +1 to the spot counter, so the visual pop-in of "X from City just registered"
-    // and the "X of 50 spots taken" tick happen together — much more believable urgency.
+    // and the "X of 75 spots taken" tick happen together — much more believable urgency.
+
+    // Daily reset: every minute, check if we've crossed 8 AM (visitor's local time) into a new day.
+    // If so, reset the counter to INITIAL_COUNT so each day starts fresh and "builds" through the day.
+    setInterval(() => {
+      try {
+        const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+        if (stored.anchor && stored.anchor !== getCurrentDayAnchor()) {
+          attendanceCount = INITIAL_COUNT;
+          saveAttendanceCount(attendanceCount);
+          updateAttendance();
+        }
+      } catch (e) {}
+    }, 60000);
 
     // Initial render
     updateAttendance();
@@ -688,6 +747,7 @@
       if (attendanceCount < MAX_CAPACITY) {
         attendanceCount += 1;
         if (attendanceCount > MAX_CAPACITY) attendanceCount = MAX_CAPACITY;
+        saveAttendanceCount(attendanceCount);
         // Brief flash on the hero counter so the change catches the eye
         const countEl = document.getElementById('attendanceCount');
         if (countEl) {
