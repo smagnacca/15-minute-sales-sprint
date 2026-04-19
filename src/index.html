@@ -226,7 +226,12 @@
     .outcomes { display:grid; grid-template-columns:repeat(2,1fr); gap:20px; max-width:920px; margin:0 auto 44px; }
     .outcome { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-left:4px solid var(--linkedin-blue); border-radius:14px; padding:24px 26px; transition:all 0.3s; }
     .outcome:hover { background:rgba(255,255,255,0.06); border-left-color:var(--gold-mango); transform:translateX(4px); }
-    .outcome .verb { display:block; font-family:var(--font-accent); font-style:italic; font-size:22px; font-weight:800; color:var(--gold-mango); margin-bottom:8px; }
+    .outcome .verb { display:block; font-family:var(--font-accent); font-style:italic; font-size:22px; font-weight:800; color:var(--gold-mango); margin-bottom:8px; animation:verb-pulse 14s ease-in-out infinite; }
+    .outcome:nth-child(1) .verb { animation-delay:0s; }
+    .outcome:nth-child(2) .verb { animation-delay:-10.5s; }
+    .outcome:nth-child(3) .verb { animation-delay:-7s; }
+    .outcome:nth-child(4) .verb { animation-delay:-3.5s; }
+    @keyframes verb-pulse { 0% { color:var(--gold-mango); text-shadow:none; } 6% { color:#fff; text-shadow:0 0 16px rgba(255,255,255,0.8), 0 0 32px rgba(255,255,255,0.5), 0 0 48px rgba(255,255,255,0.3); } 8% { color:var(--gold-mango); text-shadow:none; } 100% { color:var(--gold-mango); text-shadow:none; } }
     .outcome p { font-size:15px; color:rgba(255,255,255,0.82); line-height:1.55; }
     .reciprocity { max-width:720px; margin:0 auto; text-align:center; padding:28px 32px; background:rgba(238,175,0,0.08); border:1px solid rgba(238,175,0,0.3); border-radius:16px; font-size:17px; color:var(--gold-cream); font-family:var(--font-accent); font-style:italic; }
     .reciprocity strong { color:var(--gold-mango); font-weight:800; font-style:normal; font-family:var(--font-body); }
