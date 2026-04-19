@@ -166,8 +166,12 @@
       0%, 12%, 24%, 100% { color:#fff; text-shadow:none; }
       18% { color:var(--gold-mango); text-shadow:0 0 24px rgba(238,175,0,0.95), 0 0 56px rgba(238,175,0,0.55), 0 0 90px rgba(238,175,0,0.25); }
     }
-    .tagline-blue { animation:phrase-pulse-blue 13s ease-in-out infinite; }
-    .tagline-gold { animation:phrase-pulse-gold 13s ease-in-out infinite; }
+    /* One-shot hero phrase pulse — fires once on load, then stops. Draws the eye through AI → LinkedIn. */
+    .tagline-blue { animation:phrase-pulse-blue 3s ease-in-out 0.6s 1 both; }
+    .tagline-gold { animation:phrase-pulse-gold 3s ease-in-out 2.1s 1 both; }
+    @media (prefers-reduced-motion: reduce) {
+      .tagline-blue, .tagline-gold { animation:none; }
+    }
     .hero h1 { font-size:clamp(34px, 5vw, 60px); font-weight:900; line-height:1.12; margin-bottom:22px; max-width:960px; margin-left:auto; margin-right:auto; color:#fff; }
     .hero-subtitle { font-size:clamp(17px,2vw,21px); line-height:1.55; color:rgba(255,255,255,0.82); margin:0 auto 38px; max-width:680px; }
     .hero-subtitle strong { color:var(--white); font-weight:700; }
@@ -181,6 +185,18 @@
     .countdown-cell .num { display:block; font-size:28px; font-weight:900; color:var(--gold-mango); line-height:1; font-variant-numeric:tabular-nums; }
     .countdown-cell .lbl { display:block; font-size:10px; font-weight:700; color:rgba(255,255,255,0.65); text-transform:uppercase; letter-spacing:0.12em; margin-top:6px; }
     .countdown-live { background:rgba(34,197,94,0.12); border-color:rgba(34,197,94,0.5); color:#22c55e; padding:14px 24px; border-radius:12px; font-weight:800; font-size:15px; letter-spacing:0.04em; text-transform:uppercase; }
+    /* Scarcity-gated pulses — motion only when urgency is real. */
+    @keyframes countdown-glow-warm { 0%,100%{box-shadow:0 0 0 0 rgba(238,175,0,0);border-color:rgba(238,175,0,0.3);} 50%{box-shadow:0 0 16px 0 rgba(238,175,0,0.45);border-color:rgba(238,175,0,0.7);} }
+    @keyframes countdown-glow-hot { 0%,100%{box-shadow:0 0 0 0 rgba(238,175,0,0);border-color:rgba(238,175,0,0.5);} 50%{box-shadow:0 0 22px 2px rgba(238,175,0,0.7);border-color:rgba(238,175,0,1);} }
+    @keyframes countdown-pulse-critical { 0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,0);border-color:rgba(239,68,68,0.6);} 50%{box-shadow:0 0 24px 2px rgba(239,68,68,0.75);border-color:rgba(239,68,68,1);} }
+    .countdown-warm .countdown-cell { animation:countdown-glow-warm 4s ease-in-out infinite; }
+    .countdown-hot  .countdown-cell { animation:countdown-glow-hot 2s ease-in-out infinite; }
+    .countdown-critical .countdown-cell { animation:countdown-glow-hot 2s ease-in-out infinite; }
+    .countdown-critical .countdown-cell:last-child { animation:countdown-pulse-critical 1s ease-in-out infinite; }
+    .countdown-critical .countdown-cell:last-child .num { color:#ef4444; }
+    @media (prefers-reduced-motion: reduce) {
+      .countdown-warm .countdown-cell, .countdown-hot .countdown-cell, .countdown-critical .countdown-cell { animation:none; }
+    }
 
     /* === Marquee === */
     .marquee-bar { background:var(--dark-forest); border-top:1px solid var(--dark-border); border-bottom:1px solid var(--dark-border); padding:14px 0; overflow:hidden; }
@@ -239,6 +255,10 @@
     .outcome p { font-size:15px; color:rgba(255,255,255,0.82); line-height:1.55; }
     .reciprocity { max-width:720px; margin:0 auto; text-align:center; padding:28px 32px; background:rgba(238,175,0,0.08); border:1.5px solid rgba(238,175,0,0.5); border-radius:16px; font-size:17px; color:var(--gold-cream); font-family:var(--font-accent); font-style:italic; }
     .reciprocity strong { color:var(--gold-mango); font-weight:800; font-style:normal; font-family:var(--font-body); }
+    /* One-shot gold sweep on the Bonus box when scrolled into view — pulls eye to the reciprocity trigger. */
+    @keyframes gold-border-sweep-once { 0% { border-color:rgba(238,175,0,0.5); box-shadow:0 0 0 0 rgba(238,175,0,0), inset 0 0 0 0 rgba(238,175,0,0); } 35% { border-color:rgba(238,175,0,1); box-shadow:0 0 28px 4px rgba(238,175,0,0.65), inset 0 0 24px 0 rgba(238,175,0,0.25); } 100% { border-color:rgba(238,175,0,0.5); box-shadow:0 0 0 0 rgba(238,175,0,0), inset 0 0 0 0 rgba(238,175,0,0); } }
+    .reciprocity.pulse-once { animation:gold-border-sweep-once 2.4s ease-out 1 both; }
+    @media (prefers-reduced-motion: reduce) { .reciprocity.pulse-once { animation:none; } }
 
     /* === Agenda Block === */
     .agenda-block { max-width:920px; margin:60px auto 0; }
@@ -419,7 +439,7 @@
     <div class="container">
       <span class="event-masthead">Practical AI · Live · 15 Minutes</span>
       <div class="hero-badge"><span class="pulse-dot"></span> Wed June 17 · 7:00 PM ET</div>
-      <h1>Learn how to use AI to build connections and book more sales meetings on LinkedIn.</h1>
+      <h1>Learn how to use <span class="tagline-blue">AI</span> to build connections and book more sales meetings on <span class="tagline-gold">LinkedIn</span>.</h1>
       <p class="hero-subhead">A free 15-minute live sprint — Wednesday, June 17 at 7:00 PM ET.</p>
       <p class="hero-subtitle"><strong>One powerful play. Fifteen focused minutes.</strong> A live micro-event for <strong>salespeople and sales-adjacent pros</strong> who don't have time to waste. Walk away with a move you can run that same week.</p>
       <div class="hero-cta-row">
@@ -905,6 +925,13 @@
         <div class="countdown-cell"><span class="num">${String(minutes).padStart(2,'0')}</span><span class="lbl">Min</span></div>
         <div class="countdown-cell"><span class="num">${String(seconds).padStart(2,'0')}</span><span class="lbl">Sec</span></div>
       `;
+
+      // Scarcity tiers: warm <7d, hot <48h, critical <2h. Motion only when urgency is real.
+      el.classList.remove('countdown-warm','countdown-hot','countdown-critical');
+      const hoursLeft = diff / (1000 * 60 * 60);
+      if (hoursLeft < 2)       el.classList.add('countdown-critical');
+      else if (hoursLeft < 48) el.classList.add('countdown-hot');
+      else if (hoursLeft < 168) el.classList.add('countdown-warm');
     }
     updateCountdown();
     setInterval(updateCountdown, 1000);
@@ -921,6 +948,17 @@
       entries.forEach(x => { if (x.isIntersecting) x.target.classList.add('visible'); });
     }, { threshold: 0.1 });
     document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+
+    // One-shot gold sweep on the Bonus reciprocity box when it enters the viewport.
+    const reciprocityEl = document.querySelector('.reciprocity');
+    if (reciprocityEl) {
+      const recipObs = new IntersectionObserver((entries, o) => {
+        entries.forEach(x => {
+          if (x.isIntersecting) { x.target.classList.add('pulse-once'); o.unobserve(x.target); }
+        });
+      }, { threshold: 0.5 });
+      recipObs.observe(reciprocityEl);
+    }
 
     // === SOCIAL PROOF TOASTS ===
     const firstNames = ['Sarah', 'Michael', 'Emily', 'David', 'Jennifer', 'Chris', 'Amanda', 'Robert', 'Nicole', 'James', 'Lisa', 'Mark', 'Jessica', 'John', 'Rachel', 'Thomas', 'Lauren', 'Daniel', 'Susan', 'Kevin'];

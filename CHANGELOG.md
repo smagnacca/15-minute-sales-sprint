@@ -1,5 +1,28 @@
 # Changelog — 15 Minute Sales Sprint
 
+## 2026-04-19 — Targeted motion restore (3 conversion-triggered animations)
+
+Added back 3 of the 12 animations stripped in the expert-panel punch-list — but all **trigger-gated** (fire on user action or real event), never ambient. Keeps the panel's "motion as reward, not wallpaper" discipline while reclaiming the conversion moments the stripped set was leaving on the table.
+
+**1. One-shot hero H1 phrase pulse.** Wrapped `AI` (blue, 0.6s delay) and `LinkedIn` (gold, 2.1s delay) in the H1 — each flashes once over 3s on page load, then holds white. Pulls the reader's eye through the two phrases that drive the "is this for me?" decision in the first 3 seconds. Fill-mode `both`, so no ambient loop.
+
+**2. Scarcity-gated countdown pulse.** Three tiers wired into `updateCountdown()`:
+- `<7 days` → soft gold glow on all cells (4s cycle)
+- `<48 hrs` → brighter/faster gold glow (2s cycle)
+- `<2 hrs` → seconds cell flips red + fast red pulse (1s cycle)
+
+Dormant when there's no real urgency — so when it fires, it *means* something. Amplifies the final-72-hour registration cluster.
+
+**3. One-shot gold-border sweep on the Bonus reciprocity box.** IntersectionObserver fires a single 2.4s gold-border glow when the box enters the viewport (threshold 0.5), then unobserves. Pulls the eye to the free-chapter reciprocity trigger at the exact scroll moment the reader is deciding whether to keep scrolling or register.
+
+**All three respect `prefers-reduced-motion: reduce`** — animations disabled for users who've opted out.
+
+**What was NOT brought back** (still ambient / still bad): `masthead-pulse`, `minutes-flash`, `verb-pulse`, `blink-dot`, `hero-bg-drift`, `float-badge`, `gold-text-glow`, `metallic-shimmer`, status-light blinks.
+
+Files: `src/index.html` (CSS + H1 markup + JS). No new dependencies.
+
+---
+
 ## 2026-04-19 — Email Polish + Template Library
 
 **Confirmation email tweaks (live):**
