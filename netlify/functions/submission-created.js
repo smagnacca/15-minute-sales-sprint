@@ -1,4 +1,27 @@
 const sgMail = require('@sendgrid/mail');
+const { getStore } = require('@netlify/blobs');
+
+const REGISTRATIONS_KEY = 'recent-registrations';
+const MAX_STORED_REGISTRATIONS = 50;
+
+async function appendRegistration({ firstName, city, state }) {
+  if (!firstName) return;
+  try {
+    const store = getStore('sprint-data');
+    const existing = (await store.get(REGISTRATIONS_KEY, { type: 'json' })) || [];
+    const entry = {
+      firstName: firstName.split(' ')[0].slice(0, 24),
+      city: (city || '').slice(0, 40),
+      state: (state || '').slice(0, 6),
+      ts: Date.now()
+    };
+    const updated = [entry, ...existing].slice(0, MAX_STORED_REGISTRATIONS);
+    await store.setJSON(REGISTRATIONS_KEY, updated);
+    console.log(`Stored real registration: ${entry.firstName} from ${entry.city}, ${entry.state} (total: ${updated.length})`);
+  } catch (err) {
+    console.error('Failed to store registration in blobs:', err.message || err);
+  }
+}
 
 const SITE_URL = 'https://15-minute-sales-sprint.netlify.app';
 const CHAPTER_URL = `${SITE_URL}/downloads/storyselling-chapter-1.pdf`;
@@ -142,6 +165,11 @@ exports.handler = async (event) => {
     const firstName = (data.firstName || '').trim();
     const lastName = (data.lastName || '').trim();
     const company = (data.company || '').trim();
+    const city = (data.city || '').trim();
+    const state = (data.state || '').trim();
+
+    // Store registration for social proof toasts (firstName + city only — no PII)
+    await appendRegistration({ firstName, city, state });
 
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       console.warn('Invalid or missing email; skipping send. data:', JSON.stringify(data));

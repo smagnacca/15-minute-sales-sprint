@@ -684,6 +684,8 @@
 
         <form id="registerForm" name="sprint-registration" method="POST" data-netlify="true" netlify-honeypot="bot-field" onsubmit="handleRegister(event)" autocomplete="on" novalidate>
           <input type="hidden" name="form-name" value="sprint-registration" />
+          <input type="hidden" id="cityField" name="city" value="" />
+          <input type="hidden" id="stateField" name="state" value="" />
           <p class="hp-field" aria-hidden="true"><label>Don't fill this out: <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
 
           <div class="form-row">
@@ -753,6 +755,8 @@
     <input name="email" type="email" />
     <input name="company" type="text" />
     <input name="role" type="text" />
+    <input name="city" type="text" />
+    <input name="state" type="text" />
   </form>
 
   <!-- FOOTER -->
@@ -964,13 +968,57 @@
       { name: 'Sacramento', state: 'CA' }
     ];
 
-    function showProofToast() {
+    // === HYBRID TOAST STRATEGY ===
+    // Real registration data is fetched from /.netlify/functions/recent-registrations.
+    // <5 real registrations → 100% simulated (campaign launch phase).
+    // ≥5 real registrations → ~70% real / ~30% simulated (mature campaign).
+    // Real registrations are recycled in a round-robin queue so visitors don't see repeats back-to-back.
+    let realRegistrations = [];
+    let realQueue = [];
+    const REAL_THRESHOLD = 5;
+    const REAL_RATIO = 0.7;
+
+    async function fetchRealRegistrations() {
+      try {
+        const resp = await fetch('/.netlify/functions/recent-registrations', { cache: 'no-store' });
+        if (!resp.ok) return;
+        const data = await resp.json();
+        if (Array.isArray(data.registrations)) {
+          realRegistrations = data.registrations.filter(r => r.firstName);
+          if (realQueue.length === 0 || realQueue.length > realRegistrations.length * 2) {
+            realQueue = [...realRegistrations];
+          }
+        }
+      } catch (err) {
+        // Silent fail — fall back to simulated toasts
+      }
+    }
+
+    function pickToastData() {
+      const useReal = realRegistrations.length >= REAL_THRESHOLD && Math.random() < REAL_RATIO;
+      if (useReal) {
+        if (realQueue.length === 0) realQueue = [...realRegistrations];
+        const reg = realQueue.shift();
+        if (reg && reg.firstName) {
+          return {
+            firstName: reg.firstName,
+            cityLabel: reg.city ? `${reg.city}${reg.state ? ', ' + reg.state : ''}` : null,
+            isReal: true
+          };
+        }
+      }
       const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
       const city = cities[Math.floor(Math.random() * cities.length)];
+      return { firstName, cityLabel: `${city.name}, ${city.state}`, isReal: false };
+    }
+
+    function showProofToast() {
+      const { firstName, cityLabel } = pickToastData();
       const side = Math.random() < 0.5 ? 'left' : 'right';
       const toast = document.createElement('div');
       toast.className = `proof-toast ${side}`;
-      toast.innerHTML = `<span class="check">✓</span><strong>${firstName}</strong> from ${city.name}, ${city.state} just registered`;
+      const fromText = cityLabel ? ` from ${cityLabel}` : '';
+      toast.innerHTML = `<span class="check">✓</span><strong>${firstName}</strong>${fromText} just registered`;
       document.body.appendChild(toast);
       setTimeout(() => toast.remove(), 5000);
 
@@ -980,11 +1028,9 @@
         attendanceCount += 1;
         if (attendanceCount > VISIBLE_CAP) attendanceCount = VISIBLE_CAP;
         saveAttendanceCount(attendanceCount);
-        // Brief flash on the hero counter so the change catches the eye
         const countEl = document.getElementById('attendanceCount');
         if (countEl) {
           countEl.classList.remove('count-flash');
-          // force reflow to restart animation
           void countEl.offsetWidth;
           countEl.classList.add('count-flash');
         }
@@ -999,12 +1045,33 @@
         if (attendanceCount < VISIBLE_CAP) {
           showProofToast();
         }
-        // Always reschedule — even at the visible cap, occasional non-counter
-        // toasts could be added later. For now this is a no-op when capped.
         scheduleNextToast();
       }, delay);
     }
+
+    // Initial fetch + periodic refresh of real registrations
+    fetchRealRegistrations();
+    setInterval(fetchRealRegistrations, 60000);
     scheduleNextToast();
+
+    // === GEOLOCATION FOR FORM SUBMISSIONS ===
+    // Pre-fill hidden city/state fields using free IP geolocation.
+    // This lets new registrations feed real data into the social proof toasts.
+    async function prefillVisitorLocation() {
+      try {
+        const cityField = document.getElementById('cityField');
+        const stateField = document.getElementById('stateField');
+        if (!cityField || cityField.value) return;
+        const resp = await fetch('https://ipapi.co/json/', { cache: 'force-cache' });
+        if (!resp.ok) return;
+        const data = await resp.json();
+        if (data.city) cityField.value = String(data.city).slice(0, 40);
+        if (data.region_code) stateField.value = String(data.region_code).slice(0, 6);
+      } catch (err) {
+        // Silent fail — registration still succeeds without city
+      }
+    }
+    prefillVisitorLocation();
 
     // Inline error helper
     function showFormError(msg, focusEl) {
