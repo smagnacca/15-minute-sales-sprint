@@ -186,6 +186,8 @@
     section.block { padding:100px 0; position:relative; }
     .section-eyebrow-row { text-align:center; margin-bottom:18px; }
     .section-h2 { font-size:clamp(32px,4.5vw,48px); font-weight:900; text-align:center; margin-bottom:18px; color:var(--text-dark); }
+    .phrase-fade { opacity:0; transition:opacity 2s cubic-bezier(0.16,1,0.3,1); }
+    .phrase-fade.visible { opacity:1; }
     .section-sub { font-size:clamp(16px,1.6vw,19px); color:var(--text-secondary); max-width:720px; margin:0 auto 56px; text-align:center; line-height:1.6; }
     .testimonials-intro { font-size:clamp(20px,2.2vw,26px); font-weight:700; color:var(--text-dark); max-width:800px; margin:0 auto 48px; text-align:center; line-height:1.5; font-family:var(--font-accent); }
 
@@ -469,7 +471,7 @@
   <section class="block worth-section">
     <div class="container">
       <div class="section-eyebrow-row"><span class="eyebrow">③ What 15 Minutes Can Be Worth</span></div>
-      <h2 class="section-h2">More money. Faster career. <span class="shimmer-gold">Less wasted time.</span></h2>
+      <h2 class="section-h2"><span class="phrase-fade" style="--delay:0s;">More money.</span> <span class="phrase-fade" style="--delay:2s;">Faster career.</span> <span class="phrase-fade shimmer-gold" style="--delay:4s;">Less wasted time.</span></h2>
       <p class="section-sub">This isn't theory. It's the same playbook used by reps who consistently outperform their peers — and it costs you nothing but 15 minutes of attention.</p>
 
       <div class="stats-row stagger">
@@ -867,6 +869,26 @@
     }, { threshold: 0.5 });
 
     counterElements.forEach(el => counterObserver.observe(el));
+
+    // === PHRASE FADE-IN ANIMATION ===
+    const phraseObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !entry.target.dataset.phraseAnimated) {
+          const phrases = entry.target.querySelectorAll('.phrase-fade');
+          phrases.forEach((phrase, index) => {
+            const delayMs = index * 2000; // 2 seconds per phrase
+            setTimeout(() => {
+              phrase.classList.add('visible');
+            }, delayMs);
+          });
+          entry.target.dataset.phraseAnimated = 'true';
+          phraseObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+
+    const sectionH2 = document.querySelector('.section-h2');
+    if (sectionH2) phraseObserver.observe(sectionH2);
 
     // Form submit — Netlify Form via fetch (stays on page, shows success)
     function handleRegister(e) {
