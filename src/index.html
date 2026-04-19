@@ -201,7 +201,8 @@
 
     /* Bio block */
     .bio-block { background:linear-gradient(135deg,rgba(26,58,107,0.04) 0%,rgba(238,175,0,0.04) 100%); border:1px solid rgba(26,58,107,0.12); border-radius:24px; padding:44px 40px; max-width:880px; margin:0 auto; display:grid; grid-template-columns:120px 1fr; gap:32px; align-items:center; }
-    .bio-avatar { width:120px; height:120px; border-radius:50%; background:var(--gradient-green); display:flex; align-items:center; justify-content:center; font-size:42px; font-weight:900; color:var(--gold-mango); border:3px solid var(--gold-mango); box-shadow:0 8px 32px rgba(238,175,0,0.3); font-family:var(--font-accent); }
+    .bio-avatar { width:120px; height:120px; border-radius:50%; background:var(--gradient-green); display:flex; align-items:center; justify-content:center; font-size:42px; font-weight:900; color:var(--gold-mango); border:3px solid var(--gold-mango); box-shadow:0 8px 32px rgba(238,175,0,0.3); font-family:var(--font-accent); overflow:hidden; flex-shrink:0; }
+    .bio-avatar img { width:100%; height:100%; object-fit:cover; object-position:center top; display:block; }
     .bio-text h3 { font-size:22px; font-weight:900; color:var(--green-deep); margin-bottom:6px; }
     .bio-text .bio-cred { font-size:13px; font-weight:700; color:var(--gold-mango); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:14px; }
     .bio-text p { font-size:15px; color:var(--text-secondary); line-height:1.65; }
@@ -403,7 +404,7 @@
       </div>
 
       <div class="bio-block fade-in">
-        <div class="bio-avatar">SM</div>
+        <div class="bio-avatar"><img src="img/scott.jpg" alt="Scott Magnacca, host of the 15 Minute Sales Sprint" loading="lazy" /></div>
         <div class="bio-text">
           <h3>Hosted by Scott Magnacca</h3>
           <div class="bio-cred">Harvard ALM · Babson MBA · 4,127+ Pros Trained</div>
