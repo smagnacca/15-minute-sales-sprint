@@ -524,12 +524,12 @@
 
         <div id="capacityMessage" style="display:none;">
           <div class="capacity-reached">
-            <h3>🔥 Event at Capacity</h3>
-            <p>All 75 live seats are reserved. <strong>Still interested?</strong> Fill out the form below to contact Scott directly — we may be able to add you to the waitlist or arrange a private follow-up.</p>
+            <h3>🔥 This Session is Full</h3>
+            <p><strong>We've hit our target attendance.</strong> Still interested? Fill out the form below to join the waitlist for the next cohort — we'll prioritize you.</p>
           </div>
         </div>
 
-        <div id="seatsAvailable" class="scarcity-line"><strong>Live seats are limited.</strong> <span id="spotsRemaining">63</span> of 75 spots remaining.</div>
+        <div id="seatsAvailable" class="scarcity-line"><strong>Live seats are limited.</strong> <span id="spotsRemaining">43</span> of 55 spots remaining.</div>
 
         <form id="registerForm" name="sprint-registration" method="POST" data-netlify="true" netlify-honeypot="bot-field" onsubmit="handleRegister(event)" autocomplete="on" novalidate>
           <input type="hidden" name="form-name" value="sprint-registration" />
@@ -617,7 +617,7 @@
     // Resets every day at 8 AM (visitor's local time) to a low starting number.
     // Persists across page reloads via localStorage so returning visitors during the
     // day see the count where it left off.
-    const MAX_CAPACITY = 75;
+    const MAX_CAPACITY = 55;
     const INITIAL_COUNT = 12;
     const RESET_HOUR = 8; // 8 AM local time
     const STORAGE_KEY = 'sprintAttendance_v1';
