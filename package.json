@@ -1,0 +1,18 @@
+{
+  "name": "15-minute-sales-sprint",
+  "version": "1.0.0",
+  "description": "Free 15-minute live sprint for salespeople",
+  "main": "src/index.html",
+  "dependencies": {
+    "@netlify/blobs": "^10.7.4",
+    "@sendgrid/mail": "^8.1.3",
+    "googleapis": "^171.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "netlify dev"
+  },
+  "keywords": [],
+  "author": "Scott Magnacca",
+  "license": "MIT"
+}
