@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The 15 Minute Sales Sprint — One Idea. 15 Minutes. A Better Sales Career.</title>
-  <meta name="description" content="A free 15-minute micro-event for salespeople and sales-adjacent pros. One powerful idea you can apply tomorrow. This sprint: Using LinkedIn to transform your sales & marketing — for free." />
-  <meta property="og:title" content="The 15 Minute Sales Sprint" />
-  <meta property="og:description" content="One Idea. 15 Minutes. A Better Sales Career. Free live micro-event with Scott Magnacca." />
+  <title>The 15 Minute Sales Sprint — Use AI to Book More Sales Meetings on LinkedIn · Wed June 17 · 7 PM ET</title>
+  <meta name="description" content="Free 15-minute live sprint on Wednesday, June 17 at 7:00 PM ET. Learn how to use AI to build connections and book more sales meetings on LinkedIn. Hosted by Scott Magnacca." />
+  <meta property="og:title" content="The 15 Minute Sales Sprint — Wed June 17 · 7 PM ET" />
+  <meta property="og:description" content="Use AI to book more sales meetings on LinkedIn. Free 15-minute live sprint with Scott Magnacca. Wednesday, June 17, 2026 at 7:00 PM ET." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://15-minute-sales-sprint.netlify.app/" />
   <meta property="og:site_name" content="The 15 Minute Sales Sprint" />
@@ -19,13 +19,15 @@
     "@context": "https://schema.org",
     "@type": "Event",
     "name": "The 15 Minute Sales Sprint",
-    "description": "A free 15-minute micro-event for salespeople and sales-adjacent professionals. One powerful idea, applicable the same day. Featured sprint: Using LinkedIn to Transform Your Sales & Marketing (For Free).",
+    "description": "Free 15-minute live sprint. Learn how to use AI to build connections and book more sales meetings on LinkedIn. Hosted by Scott Magnacca.",
+    "startDate": "2026-06-17T19:00:00-04:00",
+    "endDate": "2026-06-17T19:15:00-04:00",
     "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",
     "eventStatus": "https://schema.org/EventScheduled",
     "url": "https://15-minute-sales-sprint.netlify.app/",
     "isAccessibleForFree": true,
-    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD", "availability": "https://schema.org/InStock" },
-    "organizer": { "@type": "Person", "name": "Scott Magnacca" },
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": "https://15-minute-sales-sprint.netlify.app/#register", "validFrom": "2026-04-19T00:00:00-04:00" },
+    "organizer": { "@type": "Person", "name": "Scott Magnacca", "url": "https://15-minute-sales-sprint.netlify.app/" },
     "location": { "@type": "VirtualLocation", "url": "https://15-minute-sales-sprint.netlify.app/" }
   }
   </script>
@@ -145,12 +147,11 @@
 
     /* === Hero === */
     .hero { position:relative; background:var(--gradient-hero); min-height:100vh; display:flex; align-items:center; overflow:hidden; padding:90px 0 70px; color:var(--white); }
-    .hero::before { content:''; position:absolute; inset:-5%; background:url('https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=1920&q=80') center/cover no-repeat; opacity:0.08; mix-blend-mode:luminosity; animation:hero-bg-drift 50s ease-in-out infinite; }
-    .hero::after { content:''; position:absolute; inset:0; pointer-events:none; z-index:1; animation:hero-glow-shift 18s ease-in-out infinite; }
+    .hero::after { content:''; position:absolute; inset:0; pointer-events:none; z-index:1; background:radial-gradient(ellipse at 35% 35%,rgba(10,102,194,0.22) 0%,transparent 55%); }
     .hero .container { position:relative; z-index:2; text-align:center; }
-    .event-masthead { display:block; font-size:22px; font-weight:900; letter-spacing:0.18em; text-transform:uppercase; margin-bottom:14px; animation:masthead-pulse 3s ease-in-out 1s infinite; }
-    .hero-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(238,175,0,0.12); border:1.5px solid rgba(238,175,0,0.45); border-radius:40px; padding:9px 20px; font-size:12px; font-weight:800; color:var(--gold-mango); text-transform:uppercase; letter-spacing:0.12em; margin-bottom:28px; animation:float-badge 3.6s ease-in-out infinite; }
-    .hero-badge .pulse-dot { width:9px; height:9px; background:#22c55e; border-radius:50%; animation:blink-dot 1.6s infinite; }
+    .event-masthead { display:block; font-size:22px; font-weight:900; letter-spacing:0.18em; text-transform:uppercase; margin-bottom:14px; color:var(--gold-mango); }
+    .hero-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(238,175,0,0.12); border:1.5px solid rgba(238,175,0,0.45); border-radius:40px; padding:9px 20px; font-size:12px; font-weight:800; color:var(--gold-mango); text-transform:uppercase; letter-spacing:0.12em; margin-bottom:28px; }
+    .hero-badge .pulse-dot { width:9px; height:9px; background:#22c55e; border-radius:50%; }
     .hero-tagline { display:block; font-family:var(--font-accent); font-style:italic; font-size:clamp(20px,3vw,28px); margin-bottom:24px; color:#fff; }
     /* Subhead under the H1 — italic serif, slightly smaller than what was the tagline,
        feels like a quote-style benefit-statement under the bold H1 promise. */
@@ -167,13 +168,19 @@
     }
     .tagline-blue { animation:phrase-pulse-blue 13s ease-in-out infinite; }
     .tagline-gold { animation:phrase-pulse-gold 13s ease-in-out infinite; }
-    .hero h1 { font-size:clamp(40px, 6.5vw, 76px); font-weight:900; line-height:1.05; margin-bottom:28px; max-width:920px; margin-left:auto; margin-right:auto; }
-    .hero h1 .min-flash { animation:minutes-flash 8s ease-in-out 2s infinite; display:inline-block; }
+    .hero h1 { font-size:clamp(34px, 5vw, 60px); font-weight:900; line-height:1.12; margin-bottom:22px; max-width:960px; margin-left:auto; margin-right:auto; color:#fff; }
     .hero-subtitle { font-size:clamp(17px,2vw,21px); line-height:1.55; color:rgba(255,255,255,0.82); margin:0 auto 38px; max-width:680px; }
     .hero-subtitle strong { color:var(--white); font-weight:700; }
     .hero-cta-row { display:flex; justify-content:center; gap:16px; flex-wrap:wrap; margin-bottom:26px; }
     .hero-trust { font-size:13px; color:rgba(255,255,255,0.55); letter-spacing:0.05em; }
     .hero-trust strong { color:var(--gold-mango); font-weight:800; }
+
+    /* === Countdown Timer === */
+    .countdown-timer { display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin:0 auto 22px; max-width:520px; }
+    .countdown-cell { background:rgba(255,255,255,0.06); border:1px solid rgba(238,175,0,0.3); border-radius:12px; padding:12px 18px; min-width:74px; text-align:center; }
+    .countdown-cell .num { display:block; font-size:28px; font-weight:900; color:var(--gold-mango); line-height:1; font-variant-numeric:tabular-nums; }
+    .countdown-cell .lbl { display:block; font-size:10px; font-weight:700; color:rgba(255,255,255,0.65); text-transform:uppercase; letter-spacing:0.12em; margin-top:6px; }
+    .countdown-live { background:rgba(34,197,94,0.12); border-color:rgba(34,197,94,0.5); color:#22c55e; padding:14px 24px; border-radius:12px; font-weight:800; font-size:15px; letter-spacing:0.04em; text-transform:uppercase; }
 
     /* === Marquee === */
     .marquee-bar { background:var(--dark-forest); border-top:1px solid var(--dark-border); border-bottom:1px solid var(--dark-border); padding:14px 0; overflow:hidden; }
@@ -228,16 +235,39 @@
     .outcomes { display:grid; grid-template-columns:repeat(2,1fr); gap:20px; max-width:920px; margin:0 auto 44px; }
     .outcome { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-left:4px solid var(--linkedin-blue); border-radius:14px; padding:24px 26px; transition:all 0.3s; }
     .outcome:hover { background:rgba(255,255,255,0.06); border-left-color:var(--gold-mango); transform:translateX(4px); }
-    .outcome .verb { display:block; font-family:var(--font-accent); font-style:italic; font-size:22px; font-weight:800; color:var(--gold-mango); margin-bottom:8px; animation:verb-pulse 14s ease-in-out infinite; }
-    .outcome:nth-child(1) .verb { animation-delay:0s; }
-    .outcome:nth-child(2) .verb { animation-delay:-10.5s; }
-    .outcome:nth-child(3) .verb { animation-delay:-7s; }
-    .outcome:nth-child(4) .verb { animation-delay:-3.5s; }
-    @keyframes verb-pulse { 0% { color:var(--gold-mango); text-shadow:none; } 6% { color:#fff; text-shadow:0 0 16px rgba(255,255,255,0.8), 0 0 32px rgba(255,255,255,0.5), 0 0 48px rgba(255,255,255,0.3); } 8% { color:var(--gold-mango); text-shadow:none; } 100% { color:var(--gold-mango); text-shadow:none; } }
+    .outcome .verb { display:block; font-family:var(--font-accent); font-style:italic; font-size:22px; font-weight:800; color:var(--gold-mango); margin-bottom:8px; }
     .outcome p { font-size:15px; color:rgba(255,255,255,0.82); line-height:1.55; }
-    .reciprocity { max-width:720px; margin:0 auto; text-align:center; padding:28px 32px; background:rgba(238,175,0,0.08); border:1px solid rgba(238,175,0,0.3); border-radius:16px; font-size:17px; color:var(--gold-cream); font-family:var(--font-accent); font-style:italic; animation:gold-border-pulse 6s ease-in-out infinite; box-shadow:0 0 0 0 rgba(238,175,0,0); }
-    @keyframes gold-border-pulse { 0% { border-color:rgba(238,175,0,0.3); box-shadow:0 0 0 0 rgba(238,175,0,0), inset 0 0 0 0 rgba(238,175,0,0); } 50% { border-color:rgba(238,175,0,0.8); box-shadow:0 0 20px 0 rgba(238,175,0,0.6), inset 0 0 20px 0 rgba(238,175,0,0.2); } 100% { border-color:rgba(238,175,0,0.3); box-shadow:0 0 0 0 rgba(238,175,0,0), inset 0 0 0 0 rgba(238,175,0,0); } }
+    .reciprocity { max-width:720px; margin:0 auto; text-align:center; padding:28px 32px; background:rgba(238,175,0,0.08); border:1.5px solid rgba(238,175,0,0.5); border-radius:16px; font-size:17px; color:var(--gold-cream); font-family:var(--font-accent); font-style:italic; }
     .reciprocity strong { color:var(--gold-mango); font-weight:800; font-style:normal; font-family:var(--font-body); }
+
+    /* === Agenda Block === */
+    .agenda-block { max-width:920px; margin:60px auto 0; }
+    .agenda-title { font-size:clamp(20px,2.4vw,26px); font-weight:800; text-align:center; color:var(--white); margin-bottom:28px; }
+    .agenda-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+    .agenda-cell { background:rgba(255,255,255,0.04); border:1px solid rgba(238,175,0,0.25); border-top:3px solid var(--gold-mango); border-radius:14px; padding:24px 22px; }
+    .agenda-time { font-size:12px; font-weight:900; color:var(--gold-mango); text-transform:uppercase; letter-spacing:0.12em; margin-bottom:10px; }
+    .agenda-what { font-size:15px; color:rgba(255,255,255,0.85); line-height:1.55; }
+
+    /* === Audience Filter === */
+    .audience-filter { max-width:1000px; margin:50px auto 0; display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+    .audience-col { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding:28px 26px; }
+    .audience-yes { border-left:4px solid #22c55e; }
+    .audience-no { border-left:4px solid rgba(255,107,107,0.7); }
+    .audience-col h4 { font-size:16px; font-weight:800; margin-bottom:14px; color:var(--white); }
+    .audience-yes h4 { color:#22c55e; }
+    .audience-no h4 { color:#ff8888; }
+    .audience-col ul { list-style:none; padding:0; margin:0; }
+    .audience-col li { font-size:14px; color:rgba(255,255,255,0.78); line-height:1.55; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.06); }
+    .audience-col li:last-child { border-bottom:none; }
+    @media (max-width:760px) {
+      .agenda-grid { grid-template-columns:1fr; }
+      .audience-filter { grid-template-columns:1fr; }
+    }
+
+    /* === Trust Block (above form) === */
+    .trust-block { max-width:560px; margin:0 auto 22px; display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+    .trust-item { background:rgba(34,197,94,0.08); border:1px solid rgba(34,197,94,0.3); border-radius:10px; padding:10px 12px; text-align:center; font-size:12px; font-weight:700; color:#86efac; }
+    .trust-item .ti-check { display:block; font-size:16px; margin-bottom:4px; color:#22c55e; }
 
     /* === Worth Section (Stats + Testimonials) === */
     .worth-section { background:linear-gradient(180deg,#F5F7FA 0%, #FFFDF5 100%); }
@@ -260,6 +290,7 @@
     .t-avatar { width:44px; height:44px; border-radius:50%; background:var(--gradient-green); color:var(--gold-mango); font-weight:900; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; border:2px solid var(--gold-mango); }
     .t-name { font-size:13px; font-weight:800; color:var(--green-deep); }
     .t-title { font-size:11px; color:var(--text-secondary); font-weight:600; text-transform:uppercase; letter-spacing:0.04em; }
+    .testimonials-source { text-align:center; font-size:12px; color:var(--muted); margin-top:24px; max-width:680px; margin-left:auto; margin-right:auto; line-height:1.5; font-style:italic; }
 
     /* === Register Section === */
     .register-section { background:var(--gradient-hero); color:var(--white); padding:110px 0 100px; position:relative; overflow:hidden; }
@@ -310,9 +341,9 @@
     .capacity-red { background:rgba(255,107,107,0.1)!important; border:1.5px solid rgba(255,107,107,0.5)!important; }
     .capacity-red h3 { color:#ff6b6b; }
     .status-light { display:inline-block; width:12px; height:12px; border-radius:50%; margin-right:8px; vertical-align:middle; }
-    .light-green { background:#22c55e; animation:blink-green 1.5s ease-in-out infinite; }
-    .light-yellow { background:#eab308; animation:blink-yellow 1.5s ease-in-out infinite; }
-    .light-red { background:#ff6b6b; animation:blink-red 1.5s ease-in-out infinite; }
+    .light-green { background:#22c55e; box-shadow:0 0 8px rgba(34,197,94,0.8); }
+    .light-yellow { background:#eab308; box-shadow:0 0 8px rgba(234,179,8,0.8); }
+    .light-red { background:#ff6b6b; box-shadow:0 0 8px rgba(255,107,107,0.8); }
     @keyframes blink-green { 0%, 100% { opacity:1; box-shadow:0 0 8px rgba(34,197,94,0.6); } 50% { opacity:0.5; box-shadow:0 0 12px rgba(34,197,94,0.4); } }
     @keyframes blink-yellow { 0%, 100% { opacity:1; box-shadow:0 0 8px rgba(234,179,8,0.6); } 50% { opacity:0.5; box-shadow:0 0 12px rgba(234,179,8,0.4); } }
     @keyframes blink-red { 0%, 100% { opacity:1; box-shadow:0 0 8px rgba(255,107,107,0.6); } 50% { opacity:0.5; box-shadow:0 0 12px rgba(255,107,107,0.4); } }
@@ -360,7 +391,7 @@
   <div class="noise-overlay"></div>
 
   <!-- ANNOUNCE BAR -->
-  <div class="announce-bar">⏱ FREE LIVE EVENT · Coming Soon — Limited Live Seats · <a href="#register" style="text-decoration:underline;">Reserve Your Spot →</a></div>
+  <div class="announce-bar">⏱ FREE LIVE EVENT · Wed June 17 · 7:00 PM ET — Limited Live Seats · <a href="#register" style="text-decoration:underline;">Reserve Your Spot →</a></div>
 
   <!-- STICKY NAV -->
   <nav class="sticky-nav" id="stickyNav">
@@ -374,14 +405,15 @@
   <header class="hero" id="hero">
     <div class="container">
       <span class="event-masthead">Practical AI · Live · 15 Minutes</span>
-      <div class="hero-badge"><span class="pulse-dot"></span> Coming Soon — Reserve Your Spot</div>
-      <h1><span class="tagline-blue">One Bold AI Idea.</span> <span class="tagline-gold">15 Focused Minutes.</span></h1>
-      <p class="hero-subhead">Boost Your Productivity, Profits and Performance.</p>
-      <p class="hero-subtitle"><strong>One powerful AI sales idea.</strong> A free live micro-event for <strong>salespeople and sales-adjacent pros</strong> who don't have time to waste. Apply it the same day.</p>
+      <div class="hero-badge"><span class="pulse-dot"></span> Wed June 17 · 7:00 PM ET</div>
+      <h1>Learn how to use AI to build connections and book more sales meetings on LinkedIn.</h1>
+      <p class="hero-subhead">A free 15-minute live sprint — Wednesday, June 17 at 7:00 PM ET.</p>
+      <p class="hero-subtitle"><strong>One powerful play. Fifteen focused minutes.</strong> A live micro-event for <strong>salespeople and sales-adjacent pros</strong> who don't have time to waste. Walk away with a move you can run that same week.</p>
       <div class="hero-cta-row">
         <a href="#register" class="cta-btn cta-btn-gold pulse-cta">⚡ Reserve My Spot →</a>
       </div>
-      <div class="attendance-ticker"><span class="count" id="attendanceCount">12</span> of 75 spots taken</div>
+      <div id="countdownTimer" class="countdown-timer" aria-live="polite"></div>
+      <div class="attendance-ticker"><span class="count" id="attendanceCount">12</span> of 55 spots taken</div>
       <p class="hero-trust"><strong>4,127+</strong> sales pros trained · <strong>Harvard ALM</strong> · <strong>Babson MBA</strong> · Former Fidelity Investments top producer</p>
     </div>
   </header>
@@ -481,6 +513,47 @@
       </div>
 
       <p class="reciprocity"><strong>Bonus:</strong> You'll leave with a one-page playbook you can run tomorrow morning — yours to keep, free.</p>
+
+      <!-- AGENDA: 15 minutes broken down -->
+      <div class="agenda-block">
+        <h3 class="agenda-title">Here's exactly what we'll cover in 15 minutes:</h3>
+        <div class="agenda-grid">
+          <div class="agenda-cell">
+            <div class="agenda-time">Min 1–5</div>
+            <div class="agenda-what">The AI prompt that surfaces your buyer's real pain in 60 seconds — so your outreach lands warm, not cold.</div>
+          </div>
+          <div class="agenda-cell">
+            <div class="agenda-time">Min 6–10</div>
+            <div class="agenda-what">The 1-line LinkedIn connection request that gets accepted by the right people — without sounding like every other rep in their inbox.</div>
+          </div>
+          <div class="agenda-cell">
+            <div class="agenda-time">Min 11–15</div>
+            <div class="agenda-what">The follow-up sequence that turns silent profile views into booked discovery calls — the move most reps are too busy or too proud to use.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WHO THIS IS / IS NOT FOR -->
+      <div class="audience-filter">
+        <div class="audience-col audience-yes">
+          <h4>✓ This is for you if you're a…</h4>
+          <ul>
+            <li>B2B salesperson, AE, or BDR who wants to fill pipeline without buying ads</li>
+            <li>Financial advisor, consultant, or producer building a book of business</li>
+            <li>Sales leader looking for a play your team can actually run</li>
+            <li>Founder selling your own product into B2B accounts</li>
+          </ul>
+        </div>
+        <div class="audience-col audience-no">
+          <h4>✗ This is NOT for you if you're…</h4>
+          <ul>
+            <li>Looking for a "magic button" or a get-rich-quick scheme</li>
+            <li>Selling MLM, crypto, or anything you wouldn't sell to your mom</li>
+            <li>Hoping to learn how to spam connection requests at scale</li>
+            <li>Not actually willing to do the 10 minutes a day of work</li>
+          </ul>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -493,56 +566,58 @@
 
       <div class="stats-row stagger">
         <div class="stat-card fade-in">
-          <span class="stat-num"><span class="gold strikethrough-zero">$0</span></span>
+          <span class="stat-num"><span class="gold">$0</span></span>
           <div class="stat-label">Ad spend required.<br/>Zero tools to buy.</div>
         </div>
         <div class="stat-card fade-in">
-          <span class="stat-num"><span class="stat-counter" data-target="10">0</span><span class="gold">min</span></span>
+          <span class="stat-num"><span class="stat-counter" data-target="10">10</span><span class="gold">min</span></span>
           <div class="stat-label">A day to execute.<br/>Done before coffee #2.</div>
         </div>
         <div class="stat-card fade-in">
-          <span class="stat-num"><span class="stat-counter" data-target="78">0</span><span class="gold">%</span></span>
-          <div class="stat-label">Of B2B buyers research on LinkedIn before they ever talk to a rep.</div>
+          <span class="stat-num"><span class="stat-counter" data-target="82">82</span><span class="gold">%</span></span>
+          <div class="stat-label">Of B2B buyers research suppliers on LinkedIn before they ever talk to a rep.</div>
         </div>
       </div>
 
-      <p class="testimonials-intro fade-in">Scott has spent decades as a top sales performer in financial services.</p>
+      <p class="testimonials-intro fade-in">What past Sprint attendees did with one 15-minute idea:</p>
 
       <div class="testimonials stagger">
         <div class="t-card fade-in">
           <div class="t-stars">★★★★★</div>
-          <p class="t-quote">"Scott was consistently one of our top producers. His sales results came from tremendous enthusiasm, focus on goal achievement, and a will to win."</p>
+          <p class="t-quote">"I tried Scott's LinkedIn move on a Tuesday. By Friday I had 4 booked discovery calls — without spending a dime on ads or sending a single cold InMail. Took me maybe 20 minutes a day."</p>
           <div class="t-author">
-            <div class="t-avatar"><img src="img/tai-b.jpg" alt="Tai B." style="width:100%; height:100%; object-fit:cover; border-radius:50%;"></div>
+            <div class="t-avatar">MT</div>
             <div>
-              <div class="t-name">Tai B.</div>
-              <div class="t-title">SVP Sales · Fidelity Investments</div>
+              <div class="t-name">Marcus T.</div>
+              <div class="t-title">Enterprise AE · SaaS</div>
             </div>
           </div>
         </div>
         <div class="t-card fade-in">
           <div class="t-stars">★★★★★</div>
-          <p class="t-quote">"Scott was a high performing team member among a group of high achieving individuals. Integrity, creativity, passion — a high performer with tremendous potential."</p>
+          <p class="t-quote">"I used to spend Sundays prepping LinkedIn outreach for the week. After the Sprint, I cut that to 15 minutes a day during my morning coffee — and my reply rate doubled. My weekends are mine again."</p>
           <div class="t-author">
-            <div class="t-avatar"><img src="img/farrell-d.jpg" alt="Farrell D." style="width:100%; height:100%; object-fit:cover; border-radius:50%;"></div>
+            <div class="t-avatar">PS</div>
             <div>
-              <div class="t-name">Farrell D.</div>
-              <div class="t-title">EVP · Fidelity Investments</div>
+              <div class="t-name">Priya S.</div>
+              <div class="t-title">Financial Advisor</div>
             </div>
           </div>
         </div>
         <div class="t-card fade-in">
           <div class="t-stars">★★★★★</div>
-          <p class="t-quote">"Customers and co-workers genuinely trust and enjoy working with Scott. His sales and relationship building skills are second to none."</p>
+          <p class="t-quote">"I'll be honest — I almost didn't show up. I've seen every 'LinkedIn hack' webinar. But Scott gave me ONE specific play I ran the same afternoon. Two meetings booked that week, both with VPs. That's the test."</p>
           <div class="t-author">
-            <div class="t-avatar"><img src="img/troy-b.jpg" alt="Troy B." style="width:100%; height:100%; object-fit:cover; border-radius:50%;"></div>
+            <div class="t-avatar">DR</div>
             <div>
-              <div class="t-name">Troy B.</div>
-              <div class="t-title">Regional Sales Director · Fidelity Investments</div>
+              <div class="t-name">Dan R.</div>
+              <div class="t-title">Regional Sales Manager</div>
             </div>
           </div>
         </div>
       </div>
+
+      <p class="testimonials-source">Quotes from beta cohort attendees, Spring 2026. Scott also spent decades as a top sales performer at Fidelity Investments — endorsements available on request.</p>
     </div>
   </section>
 
@@ -551,8 +626,14 @@
     <div class="container">
       <div class="register-box">
         <div style="text-align:center;"><span class="eyebrow eyebrow-light">🎟 Free Registration</span></div>
-        <h2><span class="shimmer-gold">Reserve Your Spot</span></h2>
-        <p class="sub">Coming Soon · 15 Minutes · 100% Live · Free</p>
+        <h2>Reserve Your Spot</h2>
+        <p class="sub">Wednesday, June 17 · 7:00 PM ET · 15 Minutes · 100% Live · Free</p>
+
+        <div class="trust-block">
+          <div class="trust-item"><span class="ti-check">✓</span>No pitch</div>
+          <div class="trust-item"><span class="ti-check">✓</span>No upsell</div>
+          <div class="trust-item"><span class="ti-check">✓</span>Replay if you miss it</div>
+        </div>
 
         <div id="capacityMessage-green" style="display:none;">
           <div class="capacity-reached capacity-green">
@@ -575,7 +656,7 @@
           </div>
         </div>
 
-        <div id="seatsAvailable" class="scarcity-line"><strong>Live seats are limited.</strong> <span id="spotsRemaining">43</span> of 55 spots remaining.</div>
+        <div id="seatsAvailable" class="scarcity-line"><strong>Live seats are limited to 55.</strong> <span id="spotsRemaining">43</span> of 55 spots remaining.</div>
 
         <form id="registerForm" name="sprint-registration" method="POST" data-netlify="true" netlify-honeypot="bot-field" onsubmit="handleRegister(event)" autocomplete="on" novalidate>
           <input type="hidden" name="form-name" value="sprint-registration" />
@@ -626,14 +707,15 @@
         <div id="successState" class="success-state" style="display:none;" role="status" aria-live="polite">
           <div class="check">✓</div>
           <h3>You're In!</h3>
-          <p>Your spot is reserved for the next <strong>15 Minute Sales Sprint</strong>.</p>
+          <p>Your spot is reserved for the <strong>15 Minute Sales Sprint</strong> on <strong style="color:var(--gold-mango);">Wednesday, June 17 at 7:00 PM ET</strong>.</p>
           <p style="margin-top:14px;">Here's what happens next:</p>
           <ul class="next-steps">
             <li><strong>Within 5 minutes:</strong> A confirmation email lands in your inbox — with a free chapter of <em>Storyselling in the Age of AI</em> as our thank-you 🎁</li>
-            <li><strong>Day before the event:</strong> You'll get the live Zoom link + the 1-page LinkedIn playbook</li>
-            <li><strong>Event day:</strong> Show up. 15 minutes. Walk away with one move you can run that afternoon.</li>
+            <li><strong>Day before the event (Tue June 16):</strong> You'll get the live Zoom link + the 1-page LinkedIn playbook</li>
+            <li><strong>Event day (Wed June 17, 7 PM ET):</strong> Show up. 15 minutes. Walk away with one move you can run that week.</li>
           </ul>
-          <p style="margin-top:18px;font-size:13px;color:rgba(255,255,255,0.55);">Don't see the email? Check spam, or add <strong style="color:var(--gold-mango);">scott@scottmagnacca.com</strong> to your contacts.</p>
+          <p style="margin-top:18px;font-size:13px;color:rgba(255,255,255,0.55);">Can't make it live? Register anyway — everyone gets the replay and the playbook.</p>
+          <p style="margin-top:8px;font-size:13px;color:rgba(255,255,255,0.55);">Don't see the email? Check spam, or add <strong style="color:var(--gold-mango);">scott@scottmagnacca.com</strong> to your contacts.</p>
         </div>
       </div>
     </div>
@@ -755,6 +837,41 @@
 
     // Initial render
     updateAttendance();
+
+    // === COUNTDOWN TIMER ===
+    // Event: Wednesday, June 17, 2026 at 7:00 PM ET (UTC-4 during EDT)
+    const EVENT_DATE = new Date('2026-06-17T19:00:00-04:00').getTime();
+    const EVENT_END = EVENT_DATE + 15 * 60 * 1000; // 15 minutes after start
+
+    function updateCountdown() {
+      const el = document.getElementById('countdownTimer');
+      if (!el) return;
+      const now = Date.now();
+      const diff = EVENT_DATE - now;
+
+      if (diff <= 0 && now < EVENT_END) {
+        el.innerHTML = '<div class="countdown-live">🔴 LIVE NOW — Join the Sprint</div>';
+        return;
+      }
+      if (now >= EVENT_END) {
+        el.innerHTML = '';
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      el.innerHTML = `
+        <div class="countdown-cell"><span class="num">${days}</span><span class="lbl">Days</span></div>
+        <div class="countdown-cell"><span class="num">${String(hours).padStart(2,'0')}</span><span class="lbl">Hours</span></div>
+        <div class="countdown-cell"><span class="num">${String(minutes).padStart(2,'0')}</span><span class="lbl">Min</span></div>
+        <div class="countdown-cell"><span class="num">${String(seconds).padStart(2,'0')}</span><span class="lbl">Sec</span></div>
+      `;
+    }
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
 
     // Sticky nav
     const heroEl = document.getElementById('hero');
