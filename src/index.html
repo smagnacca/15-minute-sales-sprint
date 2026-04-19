@@ -303,6 +303,19 @@
     .attendance-ticker .count.count-flash { animation:count-flash 0.85s cubic-bezier(0.34,1.56,0.64,1); display:inline-block; }
 
     .capacity-reached { background:rgba(255,107,107,0.1)!important; border:1.5px solid rgba(255,107,107,0.5)!important; padding:24px 28px; border-radius:16px; text-align:center; margin:0 0 24px 0; }
+    .capacity-green { background:rgba(34,197,94,0.1)!important; border:1.5px solid rgba(34,197,94,0.5)!important; }
+    .capacity-green h3 { color:#22c55e; }
+    .capacity-yellow { background:rgba(234,179,8,0.1)!important; border:1.5px solid rgba(234,179,8,0.5)!important; }
+    .capacity-yellow h3 { color:#eab308; }
+    .capacity-red { background:rgba(255,107,107,0.1)!important; border:1.5px solid rgba(255,107,107,0.5)!important; }
+    .capacity-red h3 { color:#ff6b6b; }
+    .status-light { display:inline-block; width:12px; height:12px; border-radius:50%; margin-right:8px; vertical-align:middle; }
+    .light-green { background:#22c55e; animation:blink-green 1.5s ease-in-out infinite; }
+    .light-yellow { background:#eab308; animation:blink-yellow 1.5s ease-in-out infinite; }
+    .light-red { background:#ff6b6b; animation:blink-red 1.5s ease-in-out infinite; }
+    @keyframes blink-green { 0%, 100% { opacity:1; box-shadow:0 0 8px rgba(34,197,94,0.6); } 50% { opacity:0.5; box-shadow:0 0 12px rgba(34,197,94,0.4); } }
+    @keyframes blink-yellow { 0%, 100% { opacity:1; box-shadow:0 0 8px rgba(234,179,8,0.6); } 50% { opacity:0.5; box-shadow:0 0 12px rgba(234,179,8,0.4); } }
+    @keyframes blink-red { 0%, 100% { opacity:1; box-shadow:0 0 8px rgba(255,107,107,0.6); } 50% { opacity:0.5; box-shadow:0 0 12px rgba(255,107,107,0.4); } }
     .capacity-reached h3 { font-size:20px; font-weight:900; color:#ff6b6b; margin-bottom:8px; }
     .capacity-reached p { color:rgba(255,255,255,0.7); font-size:14px; line-height:1.6; margin-bottom:8px; }
     .capacity-reached strong { color:var(--gold-mango); font-weight:800; }
@@ -537,10 +550,24 @@
         <h2><span class="shimmer-gold">Reserve Your Spot</span></h2>
         <p class="sub">Coming Soon · 15 Minutes · 100% Live · Free</p>
 
-        <div id="capacityMessage" style="display:none;">
-          <div class="capacity-reached">
-            <h3>🔥 This Session is Full</h3>
-            <p><strong>We've hit our target attendance.</strong> Still interested? Fill out the form below to join the waitlist for the next cohort — we'll prioritize you.</p>
+        <div id="capacityMessage-green" style="display:none;">
+          <div class="capacity-reached capacity-green">
+            <h3><span class="status-light light-green"></span> This Session Has Room</h3>
+            <p><strong>Spots available.</strong> Secure your seat for the live event — limited availability.</p>
+          </div>
+        </div>
+
+        <div id="capacityMessage-yellow" style="display:none;">
+          <div class="capacity-reached capacity-yellow">
+            <h3><span class="status-light light-yellow"></span> This Session is Filling Up Quickly</h3>
+            <p><strong>Demand is high.</strong> Register now before spots run out.</p>
+          </div>
+        </div>
+
+        <div id="capacityMessage-red" style="display:none;">
+          <div class="capacity-reached capacity-red">
+            <h3><span class="status-light light-red"></span> This Session is Nearly Full</h3>
+            <p><strong>Register now to save your spot.</strong> Still interested? Fill out the form below — we'll prioritize you on the waitlist.</p>
           </div>
         </div>
 
@@ -672,20 +699,36 @@
     function updateAttendance() {
       const countEl = document.getElementById('attendanceCount');
       const spotsRemEl = document.getElementById('spotsRemaining');
-      const capacityMsg = document.getElementById('capacityMessage');
       const seatsAvail = document.getElementById('seatsAvailable');
+      const msgGreen = document.getElementById('capacityMessage-green');
+      const msgYellow = document.getElementById('capacityMessage-yellow');
+      const msgRed = document.getElementById('capacityMessage-red');
 
       countEl.textContent = attendanceCount;
       spotsRemEl.textContent = MAX_CAPACITY - attendanceCount;
 
-      if (attendanceCount >= MAX_CAPACITY) {
-        isAtCapacity = true;
-        capacityMsg.style.display = 'block';
-        seatsAvail.style.display = 'none';
-      } else {
-        isAtCapacity = false;
-        capacityMsg.style.display = 'none';
+      // Hide all messages first
+      msgGreen.style.display = 'none';
+      msgYellow.style.display = 'none';
+      msgRed.style.display = 'none';
+
+      const capacityPercent = (attendanceCount / MAX_CAPACITY) * 100;
+
+      if (capacityPercent < 33) {
+        // Green: plenty of room
+        msgGreen.style.display = 'block';
         seatsAvail.style.display = 'block';
+        isAtCapacity = false;
+      } else if (capacityPercent < 67) {
+        // Yellow: filling up
+        msgYellow.style.display = 'block';
+        seatsAvail.style.display = 'block';
+        isAtCapacity = false;
+      } else {
+        // Red: nearly full or full
+        msgRed.style.display = 'block';
+        seatsAvail.style.display = 'block';
+        isAtCapacity = false;
       }
     }
 
