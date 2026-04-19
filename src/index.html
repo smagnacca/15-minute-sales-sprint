@@ -326,9 +326,13 @@
     .success-state p strong { color:var(--gold-mango); }
 
     /* === Social Proof Toast === */
-    .proof-toast { position:fixed; bottom:20px; left:20px; background:rgba(13,21,38,0.95); border:1px solid rgba(238,175,0,0.35); backdrop-filter:blur(16px); border-radius:14px; padding:16px 20px; color:var(--white); font-size:14px; font-weight:600; z-index:500; animation:toast-slide-in 0.4s cubic-bezier(0.34,1.56,0.64,1), toast-slide-out 0.3s cubic-bezier(0.6,-0.28,0.735,0.045) 4.7s forwards; box-shadow:0 16px 48px rgba(0,0,0,0.4); }
-    @keyframes toast-slide-in { from { transform:translateX(-120px); opacity:0; } to { transform:translateX(0); opacity:1; } }
-    @keyframes toast-slide-out { from { transform:translateX(0); opacity:1; } to { transform:translateX(-120px); opacity:0; } }
+    .proof-toast { position:fixed; bottom:20px; background:rgba(13,21,38,0.95); border:1px solid rgba(238,175,0,0.35); backdrop-filter:blur(16px); border-radius:14px; padding:16px 20px; color:var(--white); font-size:14px; font-weight:600; z-index:500; box-shadow:0 16px 48px rgba(0,0,0,0.4); max-width:280px; }
+    .proof-toast.left { left:20px; animation:toast-slide-in-left 0.4s cubic-bezier(0.34,1.56,0.64,1), toast-slide-out-left 0.3s cubic-bezier(0.6,-0.28,0.735,0.045) 4.7s forwards; }
+    .proof-toast.right { right:20px; animation:toast-slide-in-right 0.4s cubic-bezier(0.34,1.56,0.64,1), toast-slide-out-right 0.3s cubic-bezier(0.6,-0.28,0.735,0.045) 4.7s forwards; }
+    @keyframes toast-slide-in-left { from { transform:translateX(-120px); opacity:0; } to { transform:translateX(0); opacity:1; } }
+    @keyframes toast-slide-out-left { from { transform:translateX(0); opacity:1; } to { transform:translateX(-120px); opacity:0; } }
+    @keyframes toast-slide-in-right { from { transform:translateX(120px); opacity:0; } to { transform:translateX(0); opacity:1; } }
+    @keyframes toast-slide-out-right { from { transform:translateX(0); opacity:1; } to { transform:translateX(120px); opacity:0; } }
     .proof-toast .check { color:var(--gold-mango); font-weight:800; margin-right:8px; }
 
     /* === Footer === */
@@ -814,8 +818,9 @@
     function showProofToast() {
       const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
       const city = cities[Math.floor(Math.random() * cities.length)];
+      const side = Math.random() < 0.5 ? 'left' : 'right';
       const toast = document.createElement('div');
-      toast.className = 'proof-toast';
+      toast.className = `proof-toast ${side}`;
       toast.innerHTML = `<span class="check">✓</span><strong>${firstName}</strong> from ${city.name}, ${city.state} just registered`;
       document.body.appendChild(toast);
       setTimeout(() => toast.remove(), 5000);
