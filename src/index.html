@@ -263,6 +263,8 @@
     .attendance-ticker .count { font-size:24px; font-weight:900; color:var(--white); font-variant-numeric:tabular-nums; }
     .attendance-ticker .capacity-warning { color:#ff6b6b; animation:attendance-pulse 1.2s ease-in-out infinite; }
     @keyframes attendance-pulse { 0%,100%{color:#ff6b6b;text-shadow:0 0 8px rgba(255,107,107,0.3)} 50%{color:#ff8888;text-shadow:0 0 16px rgba(255,107,107,0.8)} }
+    @keyframes count-flash { 0%{transform:scale(1);color:var(--white)} 30%{transform:scale(1.25);color:var(--gold-mango);text-shadow:0 0 18px rgba(238,175,0,0.8),0 0 36px rgba(238,175,0,0.4)} 100%{transform:scale(1);color:var(--white)} }
+    .attendance-ticker .count.count-flash { animation:count-flash 0.85s cubic-bezier(0.34,1.56,0.64,1); display:inline-block; }
 
     .capacity-reached { background:rgba(255,107,107,0.1)!important; border:1.5px solid rgba(255,107,107,0.5)!important; padding:24px 28px; border-radius:16px; text-align:center; margin:0 0 24px 0; }
     .capacity-reached h3 { font-size:20px; font-weight:900; color:#ff6b6b; margin-bottom:8px; }
@@ -607,14 +609,9 @@
       }
     }
 
-    // Increment counter every 45 seconds by 1-2 spots, but only up to 50
-    setInterval(() => {
-      if (attendanceCount < MAX_CAPACITY) {
-        attendanceCount += Math.random() < 0.5 ? 1 : 2;
-        if (attendanceCount > MAX_CAPACITY) attendanceCount = MAX_CAPACITY;
-        updateAttendance();
-      }
-    }, 45000);
+    // Counter increments are now coupled to social-proof toasts (see scheduleNextToast below).
+    // Each toast = +1 to the spot counter, so the visual pop-in of "X from City just registered"
+    // and the "X of 50 spots taken" tick happen together — much more believable urgency.
 
     // Initial render
     updateAttendance();
@@ -686,6 +683,21 @@
       toast.innerHTML = `<span class="check">✓</span><strong>${firstName}</strong> from ${city.name}, ${city.state} just registered`;
       document.body.appendChild(toast);
       setTimeout(() => toast.remove(), 5000);
+
+      // Bump the attendance counter in lock-step with this toast (build urgency)
+      if (attendanceCount < MAX_CAPACITY) {
+        attendanceCount += 1;
+        if (attendanceCount > MAX_CAPACITY) attendanceCount = MAX_CAPACITY;
+        // Brief flash on the hero counter so the change catches the eye
+        const countEl = document.getElementById('attendanceCount');
+        if (countEl) {
+          countEl.classList.remove('count-flash');
+          // force reflow to restart animation
+          void countEl.offsetWidth;
+          countEl.classList.add('count-flash');
+        }
+        updateAttendance();
+      }
     }
 
     // Show social proof toast every 15-25 seconds
