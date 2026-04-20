@@ -75,6 +75,7 @@
         scroll-behavior: auto !important;
       }
       .fade-in { opacity:1 !important; transform:none !important; }
+      .card-lift, .slide-left, .slide-right, .word-reveal-word, .agenda-cell { opacity:1 !important; transform:none !important; transition:none !important; }
     }
 
     /* scroll-margin so sticky nav doesn't cover anchored sections */
@@ -130,6 +131,33 @@
     .stagger > .fade-in:nth-child(3){transition-delay:0.24s}
     .stagger > .fade-in:nth-child(4){transition-delay:0.36s}
     .stagger > .fade-in:nth-child(5){transition-delay:0.48s}
+
+    /* === ENGAGEMENT SCROLL ANIMATIONS === */
+
+    /* Card lift — richer entrance: Y translate + subtle scale (GPU composited) */
+    .card-lift { opacity:0; transform:translateY(28px) scale(0.97); transition:opacity 0.72s cubic-bezier(0.16,1,0.3,1), transform 0.72s cubic-bezier(0.16,1,0.3,1); }
+    .card-lift.visible { opacity:1; transform:none; }
+    .stagger > .card-lift:nth-child(2){transition-delay:0.13s}
+    .stagger > .card-lift:nth-child(3){transition-delay:0.26s}
+    .stagger > .card-lift:nth-child(4){transition-delay:0.39s}
+    .stagger > .card-lift:nth-child(5){transition-delay:0.52s}
+
+    /* Directional slides — for split two-column reveals (bio, book, outcomes, audience) */
+    .slide-left  { opacity:0; transform:translateX(-22px); transition:opacity 0.65s cubic-bezier(0.16,1,0.3,1), transform 0.65s cubic-bezier(0.16,1,0.3,1); }
+    .slide-right { opacity:0; transform:translateX(22px);  transition:opacity 0.65s cubic-bezier(0.16,1,0.3,1), transform 0.65s cubic-bezier(0.16,1,0.3,1); }
+    .slide-left.visible, .slide-right.visible { opacity:1; transform:none; }
+
+    /* Word-by-word heading reveal */
+    .word-reveal-word { display:inline-block; opacity:0; transform:translateY(12px); transition:opacity 0.45s cubic-bezier(0.16,1,0.3,1), transform 0.45s cubic-bezier(0.16,1,0.3,1); }
+    .word-reveal-word.visible { opacity:1; transform:none; }
+
+    /* Agenda cells — start hidden; JS staggers .visible additions sequentially */
+    .agenda-cell { opacity:0; transform:translateY(18px); transition:opacity 0.6s cubic-bezier(0.16,1,0.3,1), transform 0.6s cubic-bezier(0.16,1,0.3,1); }
+    .agenda-cell.visible { opacity:1; transform:none; }
+
+    /* Stat number gold burst — one-shot after counter completes */
+    @keyframes stat-number-glow { 0%,100%{ text-shadow:none; } 50%{ text-shadow:0 0 24px rgba(238,175,0,0.55), 0 0 48px rgba(238,175,0,0.25); } }
+    .stat-glow-once { animation:stat-number-glow 1.4s ease-in-out 1; }
 
     .noise-overlay { position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); background-size:180px 180px; opacity:0.05; pointer-events:none; z-index:9999; mix-blend-mode:overlay; }
 
@@ -495,11 +523,11 @@
   <section class="block what-section">
     <div class="container">
       <div class="section-eyebrow-row"><span class="eyebrow">① What Is This — And Why It Matters</span></div>
-      <h2 class="section-h2">15 minutes. One idea. <span class="shimmer-gold">Zero fluff.</span></h2>
+      <h2 class="section-h2 word-reveal-h2"><span class="word-reveal-word">15 minutes.</span> <span class="word-reveal-word" style="transition-delay:0.16s">One idea.</span> <span class="word-reveal-word" style="transition-delay:0.32s"><span class="shimmer-gold">Zero fluff.</span></span></h2>
       <p class="section-sub">Most "sales training" wastes your day and changes nothing on Monday. The Sales Sprint flips the script: a single, battle-tested idea you can put to work the same afternoon — and feel the difference inside a week.</p>
 
       <div class="what-grid stagger">
-        <div class="what-card fade-in">
+        <div class="what-card card-lift">
           <span class="num-tag">1</span>
           <div class="what-card-visual"><img src="img/format-team-call.jpg" alt="Diverse group of professionals on a video conference call shown on a desktop monitor" loading="lazy" /></div>
           <div class="what-card-body">
@@ -507,7 +535,7 @@
             <p>15 focused minutes. Live. Free. No 90-minute slog, no "watch the replay later." Just enough to learn one move that matters — and short enough you'll actually show up.</p>
           </div>
         </div>
-        <div class="what-card fade-in">
+        <div class="what-card card-lift">
           <span class="num-tag">2</span>
           <div class="what-card-visual"><img src="img/promise-basketball.jpg" alt="Basketball going through the net — nothing but net" loading="lazy" /></div>
           <div class="what-card-body">
@@ -515,7 +543,7 @@
             <p>One idea you can apply <strong>the same day.</strong> No "build a system," no homework, no software to buy. Walk away with a single move you can run before your next call.</p>
           </div>
         </div>
-        <div class="what-card fade-in">
+        <div class="what-card card-lift">
           <span class="num-tag">3</span>
           <div class="what-card-visual"><img src="img/why-now-runner.jpg" alt="Runner crossing the finish line with arms raised in victory, leading the pack" loading="lazy" /></div>
           <div class="what-card-body">
@@ -525,20 +553,20 @@
         </div>
       </div>
 
-      <div class="bio-block fade-in">
-        <div class="bio-avatar"><img src="img/scott.jpg" alt="Scott Magnacca, host of the 15 Minute Sales Sprint" loading="lazy" /></div>
-        <div class="bio-text">
+      <div class="bio-block">
+        <div class="bio-avatar slide-left"><img src="img/scott.jpg" alt="Scott Magnacca, host of the 15 Minute Sales Sprint" loading="lazy" /></div>
+        <div class="bio-text slide-right" style="transition-delay:0.1s">
           <h3>Hosted by Scott Magnacca</h3>
           <div class="bio-cred">Harvard ALM · Babson MBA · 4,127+ Pros Trained</div>
           <p>I learned how businesses are built at one of the world's top entrepreneurial colleges. I learned the <strong>science of why people say yes</strong> at Harvard. But my real education came from cold calls, lost deals, and the relentless grind of hitting quota. Today I train salespeople across North America on the moves that actually move the number — and I distill the best of it into 15-minute sprints you can use immediately.</p>
         </div>
       </div>
 
-      <div class="book-section fade-in">
-        <div class="book-cover">
+      <div class="book-section">
+        <div class="book-cover slide-left">
           <img src="img/Storyselling.jpg" alt="Storyselling in the Age of AI by Scott Magnacca" loading="lazy" />
         </div>
-        <div class="book-text">
+        <div class="book-text slide-right" style="transition-delay:0.12s">
           <h4>📖 Storyselling in the Age of AI</h4>
           <p>AI can generate content. But only humans can tell stories that create real connection and close deals. This book shows you exactly how to combine the creative power of human storytelling with AI as your co-pilot—turning decades of professional skill-building into weeks of accelerated mastery. You'll walk away with a repeatable system that compounds your competitive advantage over your entire career.</p>
           <p><strong>Register for the Sprint and get Chapter 1 free</strong> with your confirmation email — no upsell, no catch.</p>
@@ -556,23 +584,23 @@
           This Sprint
         </span>
       </div>
-      <h2 class="section-h2">Using LinkedIn To Transform<br/>Your <em>Sales &amp; Marketing</em> (For Free)</h2>
+      <h2 class="section-h2 fade-in">Using LinkedIn To Transform<br/>Your <em>Sales &amp; Marketing</em> (For Free)</h2>
       <p class="section-sub">In 15 minutes you'll get a usable playbook for turning LinkedIn from a place you scroll into the highest-leverage, lowest-cost pipeline channel you have. No ad spend. No InMail credits. No fluff.</p>
 
       <div class="outcomes">
-        <div class="outcome">
+        <div class="outcome slide-left">
           <span class="verb">Find</span>
           <p>The exact decision-makers buying what you sell — without InMail, scraper tools, or a Sales Navigator subscription.</p>
         </div>
-        <div class="outcome">
+        <div class="outcome slide-right" style="transition-delay:0.12s">
           <span class="verb">Engage</span>
           <p>A 3-step content rhythm that takes <strong>10 minutes a day</strong> and gets you on your buyer's radar before you ever message them.</p>
         </div>
-        <div class="outcome">
+        <div class="outcome slide-left" style="transition-delay:0.24s">
           <span class="verb">Convert</span>
           <p>Turn silent profile views into booked discovery calls with one outbound move most reps are too busy or too proud to use.</p>
         </div>
-        <div class="outcome">
+        <div class="outcome slide-right" style="transition-delay:0.36s">
           <span class="verb">Compound</span>
           <p>How every connection, comment and post stacks into long-term pipeline — so the work you do this week pays you for years.</p>
         </div>
@@ -601,7 +629,7 @@
 
       <!-- WHO THIS IS / IS NOT FOR -->
       <div class="audience-filter">
-        <div class="audience-col audience-yes">
+        <div class="audience-col audience-yes slide-left">
           <h4>✓ This is for you if you're a…</h4>
           <ul>
             <li>B2B salesperson, AE, or BDR who wants to fill pipeline without buying ads</li>
@@ -610,7 +638,7 @@
             <li>Founder selling your own product into B2B accounts</li>
           </ul>
         </div>
-        <div class="audience-col audience-no">
+        <div class="audience-col audience-no slide-right" style="transition-delay:0.1s">
           <h4>✗ This is NOT for you if you're…</h4>
           <ul>
             <li>Looking for a "magic button" or a get-rich-quick scheme</li>
@@ -631,24 +659,24 @@
       <p class="section-sub">This isn't theory. It's the same playbook used by reps who consistently outperform their peers — and it costs you nothing but 15 minutes of attention.</p>
 
       <div class="stats-row stagger">
-        <div class="stat-card fade-in">
+        <div class="stat-card card-lift">
           <span class="stat-num"><span class="gold">$0</span></span>
           <div class="stat-label">Ad spend required.<br/>Zero tools to buy.</div>
         </div>
-        <div class="stat-card fade-in">
+        <div class="stat-card card-lift">
           <span class="stat-num"><span class="stat-counter" data-target="10">10</span><span class="gold"> Min</span></span>
           <div class="stat-label">A day to execute.<br/>Done before coffee #2.</div>
         </div>
-        <div class="stat-card fade-in">
+        <div class="stat-card card-lift">
           <span class="stat-num"><span class="stat-counter" data-target="82">82</span><span class="gold">%</span></span>
           <div class="stat-label">Of B2B buyers research suppliers on LinkedIn before they ever talk to a rep.</div>
         </div>
       </div>
 
-      <p class="testimonials-intro fade-in">What past Sprint attendees did with one 15-minute idea:</p>
+      <p class="testimonials-intro card-lift">What past Sprint attendees did with one 15-minute idea:</p>
 
       <div class="testimonials stagger">
-        <div class="t-card fade-in">
+        <div class="t-card card-lift">
           <div class="t-stars">★★★★★</div>
           <p class="t-quote">"I tried Scott's LinkedIn move on a Tuesday. By Friday I had 4 booked discovery calls — without spending a dime on ads or sending a single cold InMail. Took me maybe 20 minutes a day."</p>
           <div class="t-author">
@@ -659,7 +687,7 @@
             </div>
           </div>
         </div>
-        <div class="t-card fade-in">
+        <div class="t-card card-lift">
           <div class="t-stars">★★★★★</div>
           <p class="t-quote">"I used to spend Sundays prepping LinkedIn outreach for the week. After the Sprint, I cut that to 15 minutes a day during my morning coffee — and my reply rate doubled. My weekends are mine again."</p>
           <div class="t-author">
@@ -670,7 +698,7 @@
             </div>
           </div>
         </div>
-        <div class="t-card fade-in">
+        <div class="t-card card-lift">
           <div class="t-stars">★★★★★</div>
           <p class="t-quote">"I'll be honest — I almost didn't show up. I've seen every 'LinkedIn hack' webinar. But Scott gave me ONE specific play I ran the same afternoon. Two meetings booked that week, both with VPs. That's the test."</p>
           <div class="t-author">
@@ -690,15 +718,15 @@
   <!-- REGISTRATION -->
   <section class="register-section" id="register">
     <div class="container">
-      <div class="register-box">
+      <div class="register-box card-lift">
         <div style="text-align:center;"><span class="eyebrow eyebrow-light">🎟 Free Registration</span></div>
         <h2>Reserve Your Spot</h2>
         <p class="sub">Wednesday, June 17 · 7:00 PM ET · 15 Minutes · 100% Live · Free</p>
 
         <div class="trust-block">
-          <div class="trust-item"><span class="ti-check">✓</span>No pitch</div>
-          <div class="trust-item"><span class="ti-check">✓</span>No upsell</div>
-          <div class="trust-item"><span class="ti-check">✓</span>Replay if you miss it</div>
+          <div class="trust-item slide-left"><span class="ti-check">✓</span>No pitch</div>
+          <div class="trust-item fade-in" style="transition-delay:0.1s"><span class="ti-check">✓</span>No upsell</div>
+          <div class="trust-item slide-right" style="transition-delay:0.2s"><span class="ti-check">✓</span>Replay if you miss it</div>
         </div>
 
         <div id="capacityMessage-green" style="display:none;">
@@ -965,11 +993,11 @@
       navEl.classList.toggle('show', window.scrollY > heroEl.offsetHeight - 80);
     });
 
-    // Fade in
+    // Fade in + card-lift + directional slides — all share the same observer
     const obs = new IntersectionObserver(entries => {
       entries.forEach(x => { if (x.isIntersecting) x.target.classList.add('visible'); });
     }, { threshold: 0.1 });
-    document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+    document.querySelectorAll('.fade-in, .card-lift, .slide-left, .slide-right').forEach(el => obs.observe(el));
 
     // One-shot gold sweep on the Bonus reciprocity box when it enters the viewport.
     const reciprocityEl = document.querySelector('.reciprocity');
@@ -980,6 +1008,35 @@
         });
       }, { threshold: 0.5 });
       recipObs.observe(reciprocityEl);
+    }
+
+    // === WORD-REVEAL HEADINGS ===
+    // Fires stagger on each .word-reveal-word child when heading enters viewport.
+    document.querySelectorAll('.word-reveal-h2').forEach(h2 => {
+      const wordObs = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.querySelectorAll('.word-reveal-word').forEach(w => w.classList.add('visible'));
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.3 });
+      wordObs.observe(h2);
+    });
+
+    // === AGENDA CELLS — sequential staggered reveal ===
+    // Observes the first cell; when grid enters view, fires each cell 200ms apart.
+    const agendaCells = document.querySelectorAll('.agenda-cell');
+    if (agendaCells.length) {
+      const agendaObs = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            agendaCells.forEach((cell, i) => setTimeout(() => cell.classList.add('visible'), i * 200));
+            observer.disconnect();
+          }
+        });
+      }, { threshold: 0.2 });
+      agendaObs.observe(agendaCells[0]);
     }
 
     // === SOCIAL PROOF TOASTS ===
@@ -1177,6 +1234,12 @@
           requestAnimationFrame(update);
         } else {
           element.textContent = target;
+          // Brief gold glow burst when counter finishes
+          const statNum = element.closest('.stat-num');
+          if (statNum) {
+            statNum.classList.add('stat-glow-once');
+            statNum.addEventListener('animationend', () => statNum.classList.remove('stat-glow-once'), { once: true });
+          }
         }
       }
       update();
