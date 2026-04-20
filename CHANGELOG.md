@@ -1,5 +1,26 @@
 # Changelog — 15 Minute Sales Sprint
 
+## 2026-04-20 — Hero H1 blue wave sweep animation
+
+Replaced the one-shot tagline-blue/tagline-gold phrase pulse with a sequential **blue wave sweep** that:
+- Starts all white text
+- Wave flashes "Learn how to use AI" sky blue and it **stays blue** (3.5s)
+- Wave flashes "build connections" sky blue and it **stays blue** (3.5s)
+- 1-second pause with both phrases blue
+- Wave flashes "book more sales meetings on LinkedIn" sky blue and it **stays blue** (3.5s)
+- All text holds blue for 10 seconds
+- Cycle resets when H1 scrolls back into view
+
+Total cycle: 21.5s. Uses three independent keyframe animations (`wave-p1`, `wave-p2`, `wave-p3`) triggered by IntersectionObserver on H1 entry. Restructured H1 markup to three `pulse-phrase` spans for granular animation control.
+
+Removed old animations: `phrase-pulse-blue`, `phrase-pulse-gold`. Removed classes: `.tagline-blue`, `.tagline-gold`.
+
+Files: `src/index.html` (CSS keyframes + H1 markup + JS observer).
+
+Commit: `ba63d5f`
+
+---
+
 ## 2026-04-19 — Targeted motion restore (3 conversion-triggered animations)
 
 Added back 3 of the 12 animations stripped in the expert-panel punch-list — but all **trigger-gated** (fire on user action or real event), never ambient. Keeps the panel's "motion as reward, not wallpaper" discipline while reclaiming the conversion moments the stripped set was leaving on the table.
