@@ -156,21 +156,43 @@
     /* Subhead under the H1 — italic serif, slightly smaller than what was the tagline,
        feels like a quote-style benefit-statement under the bold H1 promise. */
     .hero-subhead { font-family:var(--font-accent); font-style:italic; font-size:clamp(22px,2.6vw,32px); font-weight:700; color:#FFF8E1; margin:18px auto 30px; max-width:820px; line-height:1.25; letter-spacing:-0.005em; }
-    /* Sequential phrase pulse: "One bold AI idea." flashes sky blue, then "15 focused minutes." flashes gold,
-       then 10s pause, repeat. Both spans share the same 13s cycle so they stay in lock-step. */
-    @keyframes phrase-pulse-blue {
-      0%, 12%, 100% { color:#fff; text-shadow:none; }
-      6% { color:#38BDF8; text-shadow:0 0 24px rgba(56,189,248,0.95), 0 0 56px rgba(56,189,248,0.55), 0 0 90px rgba(56,189,248,0.25); }
+    /* Hero H1 blue wave sweep. Wave passes through each phrase (3.5s each), flashing it sky blue.
+       Text stays sky blue after the wave hits it. 10s pause after all phrases are blue, then cycle resets.
+       Total cycle: 21.5s. Triggered each time the H1 scrolls into view. */
+    .pulse-phrase {
+      color: #fff;
     }
-    @keyframes phrase-pulse-gold {
-      0%, 12%, 24%, 100% { color:#fff; text-shadow:none; }
-      18% { color:var(--gold-mango); text-shadow:0 0 24px rgba(238,175,0,0.95), 0 0 56px rgba(238,175,0,0.55), 0 0 90px rgba(238,175,0,0.25); }
+    .hero h1.pulse-active .pulse-phrase {
+      animation: 21.5s ease-in-out 1 both;
     }
-    /* One-shot hero phrase pulse — fires once on load, then stops. Draws the eye through AI → LinkedIn. */
-    .tagline-blue { animation:phrase-pulse-blue 3s ease-in-out 0.6s 1 both; }
-    .tagline-gold { animation:phrase-pulse-gold 3s ease-in-out 2.1s 1 both; }
+    .hero h1.pulse-active .pulse-phrase.p1 { animation-name: wave-p1; }
+    .hero h1.pulse-active .pulse-phrase.p2 { animation-name: wave-p2; }
+    .hero h1.pulse-active .pulse-phrase.p3 { animation-name: wave-p3; }
+
+    @keyframes wave-p1 {
+      0% { color: #fff; text-shadow: none; }
+      1.6% { color: #fff; text-shadow: 0 0 30px rgba(56,189,248,0.6); }
+      3.2% { color: #38BDF8; text-shadow: 0 0 50px rgba(56,189,248,1), 0 0 80px rgba(56,189,248,0.8); }
+      4.8% { color: #38BDF8; text-shadow: none; }
+      100% { color: #38BDF8; text-shadow: none; }
+    }
+    @keyframes wave-p2 {
+      0%, 16.3% { color: #fff; text-shadow: none; }
+      18% { color: #fff; text-shadow: 0 0 30px rgba(56,189,248,0.6); }
+      19.6% { color: #38BDF8; text-shadow: 0 0 50px rgba(56,189,248,1), 0 0 80px rgba(56,189,248,0.8); }
+      21.2% { color: #38BDF8; text-shadow: none; }
+      100% { color: #38BDF8; text-shadow: none; }
+    }
+    @keyframes wave-p3 {
+      0%, 37.2% { color: #fff; text-shadow: none; }
+      39% { color: #fff; text-shadow: 0 0 30px rgba(56,189,248,0.6); }
+      40.6% { color: #38BDF8; text-shadow: 0 0 50px rgba(56,189,248,1), 0 0 80px rgba(56,189,248,0.8); }
+      42.2% { color: #38BDF8; text-shadow: none; }
+      100% { color: #38BDF8; text-shadow: none; }
+    }
     @media (prefers-reduced-motion: reduce) {
-      .tagline-blue, .tagline-gold { animation:none; }
+      .pulse-phrase { color:#fff; text-shadow:none; }
+      .hero h1.pulse-active .pulse-phrase { animation:none; }
     }
     .hero h1 { font-size:clamp(34px, 5vw, 60px); font-weight:900; line-height:1.12; margin-bottom:22px; max-width:960px; margin-left:auto; margin-right:auto; color:#fff; }
     .hero-subtitle { font-size:clamp(17px,2vw,21px); line-height:1.55; color:rgba(255,255,255,0.82); margin:0 auto 38px; max-width:680px; }
@@ -439,7 +461,7 @@
     <div class="container">
       <span class="event-masthead">Practical AI · Live · 15 Minutes</span>
       <div class="hero-badge"><span class="pulse-dot"></span> Wed June 17 · 7:00 PM ET</div>
-      <h1>Learn how to use <span class="tagline-blue">AI</span> to build connections and book more sales meetings on <span class="tagline-gold">LinkedIn</span>.</h1>
+      <h1><span class="pulse-phrase p1">Learn how to use AI</span> to <span class="pulse-phrase p2">build connections</span> and <span class="pulse-phrase p3">book more sales meetings on LinkedIn</span>.</h1>
       <p class="hero-subhead">A free 15-minute live sprint — Wednesday, June 17 at 7:00 PM ET.</p>
       <p class="hero-subtitle"><strong>One powerful play. Fifteen focused minutes.</strong> A live micro-event for <strong>salespeople and sales-adjacent pros</strong> who don't have time to waste. Walk away with a move you can run that same week.</p>
       <div class="hero-cta-row">
@@ -1174,6 +1196,23 @@
     }, { threshold: 0.5 });
 
     counterElements.forEach(el => counterObserver.observe(el));
+
+    // === HERO H1 BLUE SWEEP — re-trigger each time the H1 scrolls into view ===
+    const heroH1 = document.querySelector('.hero h1');
+    if (heroH1) {
+      const sweepObs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            heroH1.classList.remove('pulse-active');
+            void heroH1.offsetWidth;
+            heroH1.classList.add('pulse-active');
+          } else {
+            heroH1.classList.remove('pulse-active');
+          }
+        });
+      }, { threshold: 0.5 });
+      sweepObs.observe(heroH1);
+    }
 
     // === PHRASE FADE-IN ANIMATION ===
     const phraseObserver = new IntersectionObserver((entries) => {
