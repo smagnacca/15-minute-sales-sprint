@@ -1,5 +1,36 @@
 # Changelog — 15 Minute Sales Sprint
 
+## 2026-04-20 — Engagement scroll animations (engagement-animation agent)
+
+Added section-by-section scroll-triggered reveals across the full page using CSS transitions + IntersectionObserver. All animations are one-shot (fire on entry, don't repeat), GPU-composited (transform + opacity only), and fully respect `prefers-reduced-motion`. No new JS libraries or build dependencies.
+
+**New animation vocabulary:**
+- `.card-lift` — `translateY(28px) scale(0.97) → none` over 0.72s. Replaces bare `fade-in` on all cards and panels.
+- `.slide-left` / `.slide-right` — `translateX(±22px) → none` over 0.65s. Used for two-column split reveals.
+- `.word-reveal-word` — `translateY(12px) → none` over 0.45s per word span. Used for section headings.
+- `.agenda-cell` — `translateY(18px) → none` over 0.6s; staggered 200ms apart via dedicated observer.
+- `.stat-glow-once` — 1.4s gold text-shadow burst fires once after each counter finishes counting.
+
+**Section-by-section changes:**
+- **What section h2:** Word-by-word phrase reveal — "15 minutes." → "One idea." → "Zero fluff." each fade up in sequence (0 / 160 / 320ms delays).
+- **What cards (3):** Upgraded from `fade-in` → `card-lift` with 130ms stagger between cards.
+- **Bio block:** Removed parent `fade-in`; avatar slides from left, text block slides from right (100ms delay).
+- **Book section:** Cover slides from left, copy slides from right (120ms delay).
+- **Sprint section h2:** Smooth `fade-in` on scroll entry.
+- **Outcome boxes (4):** Alternating left/right slides with 120ms stagger — box 1&3 left, box 2&4 right.
+- **Agenda cells (3):** Sequential stagger — cell 1 → 200ms → cell 2 → 200ms → cell 3.
+- **Audience filter:** ✓ column slides left, ✗ column slides right — simultaneous split reveal.
+- **Stat cards (3):** `card-lift` with stagger; gold glow burst fires once when counter completes.
+- **Testimonials intro + 3 cards:** All `card-lift` with 150ms stagger.
+- **Register box:** `card-lift` entrance as user scrolls to form.
+- **Trust pills (No pitch / No upsell / Replay):** Left → center → right cascade (100ms / 200ms delays).
+
+**Also created:** `~/.claude/skills/engagement-animation.md` — a reusable skill that encodes this animation vocabulary, guiding principles, and workflow for future sessions on any project.
+
+Commit: `26274dc`
+
+---
+
 ## 2026-04-20 — Hero H1 blue wave sweep animation
 
 Replaced the one-shot tagline-blue/tagline-gold phrase pulse with a sequential **blue wave sweep** that:
