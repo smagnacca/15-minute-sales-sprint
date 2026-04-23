@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>15-Minute Sales Sprint</title>
+<script src="runtime/hf-runtime.js"></script>
+<script src="runtime/gsap.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #000; overflow: hidden; }
+
+#comp {
+  width: 1920px; height: 1080px;
+  position: relative; overflow: hidden;
+  font-family: Impact, 'Arial Narrow', sans-serif;
+  background: #000010; color: #fff;
+}
+
+/* ── Background ── */
+#bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 18% 28%, #001840 0%, transparent 55%),
+    radial-gradient(ellipse at 82% 72%, #001020 0%, transparent 55%),
+    #000010;
+}
+/* Ken Burns zoom wrapper */
+#kb-wrap { position: absolute; inset: -80px; transform-origin: 40% 55%; }
+#grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.04) 1px, transparent 1px);
+  background-size: 96px 96px;
+}
+/* Orbs */
+.orb { position: absolute; border-radius: 50%; filter: blur(140px); }
+#orb-cyan { width: 700px; height: 700px; background: #00d4ff; top: -220px; left: -220px; opacity: 0.22; }
+#orb-gold { width: 600px; height: 600px; background: #f5a623; bottom: -200px; right: -120px; opacity: 0.15; }
+#orb-blue { width: 900px; height: 900px; background: #0050ff; top: 50%; left: 50%; transform: translate(-50%,-50%); opacity: 0; }
+
+/* Effects */
+#flash      { position: absolute; inset: 0; background: #fff;    opacity: 0; z-index: 200; pointer-events: none; }
+#cyan-flash { position: absolute; inset: 0; background: #00d4ff; opacity: 0; z-index: 199; pointer-events: none; }
+#gold-flash { position: absolute; inset: 0; background: #f5a623; opacity: 0; z-index: 198; pointer-events: none; }
+#scanline {
+  position: absolute; left: 0; right: 0; top: -4px; height: 4px;
+  background: linear-gradient(90deg, transparent, #00d4ff 30%, #fff 50%, #00d4ff 70%, transparent);
+  box-shadow: 0 0 30px #00d4ff, 0 0 60px rgba(0,212,255,0.5);
+  opacity: 0; z-index: 100;
+}
+
+/* ── CENTER HELPER ── */
+.cx {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+/* ════════════════════════════════════
+   SCENE ELEMENTS
+════════════════════════════════════ */
+
+/* S1 — 82% STAT */
+#s1-num {
+  font-size: 300px; line-height: 1; display: block;
+  color: transparent;
+  background: linear-gradient(135deg, #00d4ff 0%, #fff 45%, #f5a623 100%);
+  -webkit-background-clip: text; background-clip: text;
+  filter: drop-shadow(0 0 70px rgba(0,212,255,0.75));
+  opacity: 0;
+}
+#s1-sub { font-size: 56px; letter-spacing: 6px; color: #fff; opacity: 0; margin-top: -20px; }
+/* Metallic sheen animation on number */
+@keyframes sheen {
+  0%   { background-position: -200% center; }
+  100% { background-position: 300% center; }
+}
+/* Pulse rings around stat */
+#s1-ring1, #s1-ring2 {
+  position: absolute; border-radius: 50%;
+  border: 3px solid rgba(0,212,255,0.5);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+}
+#s1-ring1 { width: 420px; height: 420px; }
+#s1-ring2 { width: 560px; height: 560px; }
+
+/* S2 — Are you showing up? */
+#s2-q1 { font-size: 66px; color: #888; letter-spacing: 4px; opacity: 0; }
+#s2-q2 { font-size: 116px; color: #fff; margin-top: 8px; opacity: 0; }
+#s2-cyan { color: #00d4ff; }
+#s2-wrap { width: 1500px; }
+
+/* S3 — Posting / scrolling / hoping */
+#s3-label { font-size: 50px; color: #666; letter-spacing: 10px; opacity: 0; }
+#s3-w1 { font-size: 128px; color: #aaa; opacity: 0; }
+#s3-w2 { font-size: 128px; color: #888; opacity: 0; }
+#s3-w3 { font-size: 128px; color: #666; opacity: 0; }
+#s3-wrap { width: 1400px; }
+
+/* S3b — Zero results */
+#s3b-z1 { font-size: 104px; opacity: 0; }
+#s3b-z2 { font-size: 104px; opacity: 0; margin-top: 8px; }
+.red { color: #f44336; }
+#s3b-wrap { width: 1400px; }
+
+/* S4 — Here's what's changed */
+#s4-text { font-size: 108px; color: #f5a623; letter-spacing: 4px; opacity: 0; }
+
+/* S5 — AI transformed */
+#s5-l1 { font-size: 88px; color: #fff; opacity: 0; }
+#s5-ai { color: #00d4ff; }
+#s5-l2 { font-size: 62px; color: #666; margin-top: 18px; letter-spacing: 3px; opacity: 0; }
+#s5-wrap { width: 1520px; }
+
+/* S6 — Window */
+#s6-text { font-size: 140px; color: #f5a623; letter-spacing: 8px; opacity: 0; }
+#s6-line { width: 0; height: 6px; margin: 12px auto 0; background: linear-gradient(90deg, transparent, #f5a623, transparent); box-shadow: 0 0 20px rgba(245,166,35,0.8); }
+
+/* S7 — HERO CARD */
+#h-eye   { font-size: 44px; color: #00d4ff; letter-spacing: 18px; opacity: 0; margin-bottom: 8px; }
+#h-l1    {
+  font-size: 188px; line-height: 0.85; display: block;
+  color: transparent;
+  background: linear-gradient(135deg, #f5a623 0%, #fff 50%, #f5a623 100%);
+  -webkit-background-clip: text; background-clip: text;
+  filter: drop-shadow(0 0 60px rgba(245,166,35,0.55));
+  opacity: 0;
+}
+#h-l2 {
+  font-size: 188px; line-height: 0.85; display: block;
+  color: transparent;
+  background: linear-gradient(135deg, #f5a623 0%, #fff 50%, #f5a623 100%);
+  -webkit-background-clip: text; background-clip: text;
+  filter: drop-shadow(0 0 60px rgba(245,166,35,0.55));
+  opacity: 0;
+}
+#h-sub { font-size: 46px; color: #aaa; letter-spacing: 6px; margin-top: 18px; opacity: 0; }
+
+/* S8 — LIVE badge */
+#live-badge {
+  background: #f44336;
+  padding: 22px 90px;
+  font-size: 80px; color: #fff; letter-spacing: 10px;
+  clip-path: polygon(22px 0, 100% 0, calc(100% - 22px) 100%, 22px 100%);
+  box-shadow: 0 0 80px rgba(244,67,54,0.75);
+  opacity: 0;
+}
+
+/* S9 — Features / AI prompt */
+#f1 { font-size: 76px; color: #fff; opacity: 0; }
+#f1 .gold { color: #f5a623; }
+#f2 { font-size: 76px; color: #fff; margin-top: 10px; opacity: 0; }
+#f2 .cyan { color: #00d4ff; }
+#f3 { font-size: 54px; color: #888; margin-top: 10px; letter-spacing: 3px; opacity: 0; }
+#feat-wrap { width: 1500px; text-align: center; }
+
+/* S10 — 60 seconds */
+#s10-num  { font-size: 240px; color: #f5a623; filter: drop-shadow(0 0 60px rgba(245,166,35,0.8)); opacity: 0; line-height: 1; }
+#s10-unit { font-size: 70px; color: #aaa; letter-spacing: 10px; opacity: 0; }
+
+/* S11 — Connection request */
+#s11-l1 { font-size: 84px; color: #fff; opacity: 0; }
+#s11-l1 .cyan { color: #00d4ff; }
+#s11-l2 { font-size: 60px; color: #888; margin-top: 16px; opacity: 0; letter-spacing: 2px; }
+#s11-wrap { width: 1500px; }
+/* Marker underline */
+#s11-underline { width: 0; height: 6px; margin: 6px 0 0; background: linear-gradient(90deg, #00d4ff, #f5a623); box-shadow: 0 0 16px rgba(0,212,255,0.7); }
+
+/* S12 — Follow-up sequence */
+#s12-l1 { font-size: 76px; color: #fff; opacity: 0; }
+#s12-l1 .cyan { color: #00d4ff; }
+#s12-l2 { font-size: 76px; color: #fff; margin-top: 10px; opacity: 0; }
+#s12-l2 .gold { color: #f5a623; }
+#s12-l3 { font-size: 72px; color: #fff; margin-top: 10px; opacity: 0; }
+#s12-wrap { width: 1500px; }
+
+/* S13 — Zero. No. No. */
+#nf1 { font-size: 120px; color: #00d4ff; opacity: 0; }
+#nf2 { font-size: 120px; color: #666;    opacity: 0; }
+#nf3 { font-size: 120px; color: #666;    opacity: 0; }
+#nf-wrap { text-align: center; }
+
+/* S14 — ONE MOVE */
+#s14-text { font-size: 160px; color: #f5a623; letter-spacing: 10px; opacity: 0; filter: drop-shadow(0 0 50px rgba(245,166,35,0.7)); }
+#s14-bolt { font-size: 140px; opacity: 0; }
+
+/* S15 — Run it */
+#s15-l1 { font-size: 72px; color: #aaa; letter-spacing: 4px; opacity: 0; }
+#s15-l2 { font-size: 108px; color: #00d4ff; margin-top: 6px; opacity: 0; }
+#s15-wrap { width: 1500px; }
+
+/* S16 — 4000+ proof */
+#s16-num  { font-size: 210px; color: transparent; background: linear-gradient(135deg, #f5a623, #fff, #f5a623); -webkit-background-clip: text; background-clip: text; filter: drop-shadow(0 0 50px rgba(245,166,35,0.7)); opacity: 0; line-height: 1; }
+#s16-txt  { font-size: 72px; color: #fff; letter-spacing: 4px; opacity: 0; margin-top: -10px; }
+
+/* S17 — DATE CARD */
+#dt-eye  { font-size: 44px; color: #aaa; letter-spacing: 14px; opacity: 0; }
+#dt-main {
+  font-size: 178px; line-height: 0.85;
+  color: transparent;
+  background: linear-gradient(135deg, #f5a623 0%, #fff 50%, #f5a623 100%);
+  -webkit-background-clip: text; background-clip: text;
+  filter: drop-shadow(0 0 60px rgba(245,166,35,0.85));
+  opacity: 0;
+}
+#dt-time { font-size: 78px; color: #00d4ff; letter-spacing: 10px; margin-top: 10px; opacity: 0; }
+#dt-wrap { text-align: center; }
+
+/* S18 — Change everything */
+#s18-min  { font-size: 96px; color: #f5a623; opacity: 0; }
+#s18-rest { font-size: 96px; color: #fff;    opacity: 0; margin-top: 6px; }
+#s18-wrap { width: 1400px; }
+
+/* S19 — END CARD */
+#end-card {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, #000820 0%, #001840 60%, #000820 100%);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  opacity: 0; z-index: 100;
+}
+#end-eye   { font-size: 44px; color: #00d4ff; letter-spacing: 16px; margin-bottom: 12px; opacity: 0; }
+#end-title { font-size: 160px; line-height: 0.82; text-align: center; color: #fff; opacity: 0; }
+#end-cta {
+  margin-top: 44px;
+  background: linear-gradient(135deg, #f5a623, #ff8000);
+  padding: 30px 120px;
+  font-size: 60px; color: #000; letter-spacing: 6px;
+  border-radius: 6px;
+  box-shadow: 0 0 70px rgba(245,166,35,0.55);
+  opacity: 0;
+}
+#end-free { font-size: 44px; color: #aaa; letter-spacing: 6px; margin-top: 22px; opacity: 0; }
+</style>
+</head>
+<body>
+
+<div id="comp"
+     data-composition-id="15-min-sales-sprint"
+     data-start="0"
+     data-duration="104.04"
+     data-width="1920"
+     data-height="1080">
+
+<!-- ── ALWAYS-ON BACKGROUND ── -->
+<div id="bg">
+  <div id="kb-wrap"></div>
+</div>
+<div id="grid"></div>
+<div class="orb" id="orb-cyan"></div>
+<div class="orb" id="orb-gold"></div>
+<div class="orb" id="orb-blue"></div>
+
+<!-- Effects -->
+<div id="scanline"></div>
+<div id="flash"></div>
+<div id="cyan-flash"></div>
+<div id="gold-flash"></div>
+
+<!-- Pulse rings (S1) -->
+<div id="s1-ring1"></div>
+<div id="s1-ring2"></div>
+
+<!-- S1: 82% STAT  0.00 – 7.69s -->
+<div class="clip" data-start="0" data-duration="7.69" data-track-index="2">
+  <div class="cx">
+    <span id="s1-num">82%</span>
+    <div id="s1-sub">OF YOUR BUYERS ARE ALREADY ON LINKEDIN</div>
+  </div>
+</div>
+
+<!-- S2: Are you showing up?  8.38 – 14.27s -->
+<div class="clip" data-start="8.38" data-duration="5.89" data-track-index="2">
+  <div class="cx" id="s2-wrap">
+    <div id="s2-q1">BEFORE THEY EVEN TALK TO A REP</div>
+    <div id="s2-q2">ARE YOU <span id="s2-cyan">SHOWING UP?</span></div>
+  </div>
+</div>
+
+<!-- S3: Posting / scrolling / hoping  15.46 – 23.33s -->
+<div class="clip" data-start="15.46" data-duration="7.87" data-track-index="2">
+  <div class="cx" id="s3-wrap">
+    <div id="s3-label">MOST SALESPEOPLE ARE</div>
+    <div id="s3-w1">POSTING.</div>
+    <div id="s3-w2">SCROLLING.</div>
+    <div id="s3-w3">HOPING.</div>
+    <div id="s3-z1" style="font-size:104px; color:#f44336; opacity:0; margin-top:8px;"><span class="red">ZERO</span> BOOKINGS</div>
+    <div id="s3-z2" style="font-size:104px; color:#f44336; opacity:0;"><span class="red">ZERO</span> PIPELINE</div>
+  </div>
+</div>
+
+<!-- S3b: Zero results  23.34 – 25.39s -->
+<div class="clip" data-start="23.34" data-duration="2.04" data-track-index="2">
+  <div class="cx" id="s3b-wrap">
+    <div id="s3b-z1"><span class="red">ZERO</span> BOOKINGS</div>
+    <div id="s3b-z2"><span class="red">ZERO</span> PIPELINE</div>
+  </div>
+</div>
+
+<!-- S4: Here's what's changed  25.40 – 26.37s -->
+<div class="clip" data-start="25.40" data-duration="0.97" data-track-index="2">
+  <div class="cx"><div id="s4-text">HERE'S WHAT'S CHANGED.</div></div>
+</div>
+
+<!-- S5: AI transformed LinkedIn  26.38 – 33.71s -->
+<div class="clip" data-start="26.38" data-duration="7.33" data-track-index="2">
+  <div class="cx" id="s5-wrap">
+    <div id="s5-l1"><span id="s5-ai">AI</span> HAS COMPLETELY TRANSFORMED<br>LINKEDIN OUTREACH.</div>
+    <div id="s5-l2">YOUR COMPETITION IS STILL FIGURING IT OUT.</div>
+  </div>
+</div>
+
+<!-- S6: That's your window  34.60 – 36.99s -->
+<div class="clip" data-start="34.60" data-duration="2.39" data-track-index="2">
+  <div class="cx">
+    <div id="s6-text">THAT'S YOUR WINDOW.</div>
+    <div id="s6-line"></div>
+  </div>
+</div>
+
+<!-- S7: HERO CARD  37.10 – 46.99s -->
+<div class="clip" data-start="37.10" data-duration="9.89" data-track-index="2">
+  <div class="cx">
+    <div id="h-eye">INTRODUCING</div>
+    <span id="h-l1">15-MINUTE</span>
+    <span id="h-l2">SALES SPRINT</span>
+    <div id="h-sub">ONE POWERFUL IDEA &nbsp;·&nbsp; 15 FOCUS MINUTES</div>
+  </div>
+</div>
+
+<!-- S8: Live and free  47.12 – 48.61s -->
+<div class="clip" data-start="47.12" data-duration="1.49" data-track-index="2">
+  <div class="cx"><div id="live-badge">⚡ LIVE &amp; FREE ⚡</div></div>
+</div>
+
+<!-- S9: AI prompt / real pain  48.62 – 54.93s -->
+<div class="clip" data-start="48.62" data-duration="6.31" data-track-index="2">
+  <div class="cx" id="feat-wrap">
+    <div id="f1">IN <span class="gold">15 MINUTES</span> YOU'LL GET</div>
+    <div id="f2">THE <span class="cyan">AI PROMPT</span> THAT SURFACES</div>
+    <div id="f3">YOUR BUYER'S REAL PAIN &nbsp;·&nbsp; IN 60 SECONDS</div>
+  </div>
+</div>
+
+<!-- S10: In 60 seconds  56.22 – 57.25s -->
+<div class="clip" data-start="56.22" data-duration="1.03" data-track-index="2">
+  <div class="cx">
+    <div id="s10-num">60</div>
+    <div id="s10-unit">SECONDS</div>
+  </div>
+</div>
+
+<!-- S11: One-line connection request  58.36 – 66.31s -->
+<div class="clip" data-start="58.36" data-duration="7.95" data-track-index="2">
+  <div class="cx" id="s11-wrap">
+    <div id="s11-l1">THE <span class="cyan">ONE-LINE</span> CONNECTION REQUEST</div>
+    <div id="s11-underline"></div>
+    <div id="s11-l2">THAT THE RIGHT PEOPLE ACTUALLY ACCEPT —<br>WITHOUT SOUNDING LIKE EVERY OTHER REP</div>
+  </div>
+</div>
+
+<!-- S12: Follow-up sequence  67.38 – 74.53s -->
+<div class="clip" data-start="67.38" data-duration="7.15" data-track-index="2">
+  <div class="cx" id="s12-wrap">
+    <div id="s12-l1">THE <span class="cyan">FOLLOW-UP SEQUENCE</span></div>
+    <div id="s12-l2">THAT TURNS SILENT <span class="gold">PROFILE VIEWS</span></div>
+    <div id="s12-l3">INTO BOOKED DISCOVERY CALLS.</div>
+  </div>
+</div>
+
+<!-- S13: Zero ad spend / no software / no fluff  75.86 – 81.35s -->
+<div class="clip" data-start="75.86" data-duration="5.49" data-track-index="2">
+  <div class="cx" id="nf-wrap">
+    <div id="nf1">ZERO AD SPEND</div>
+    <div id="nf2">NO SOFTWARE</div>
+    <div id="nf3">NO FLUFF</div>
+  </div>
+</div>
+
+<!-- S14: One move  81.36 – 84.23s (holds through silence gap) -->
+<div class="clip" data-start="81.36" data-duration="2.87" data-track-index="2">
+  <div class="cx">
+    <div id="s14-text">ONE MOVE</div>
+    <div id="s14-bolt">⚡</div>
+  </div>
+</div>
+
+<!-- S15: Run before your next call  84.24 – 86.45s -->
+<div class="clip" data-start="84.24" data-duration="2.21" data-track-index="2">
+  <div class="cx" id="s15-wrap">
+    <div id="s15-l1">YOU CAN RUN THIS</div>
+    <div id="s15-l2">BEFORE YOUR NEXT CALL.</div>
+  </div>
+</div>
+
+<!-- S16: 4,000+ sales pros  87.30 – 90.83s -->
+<div class="clip" data-start="87.30" data-duration="3.53" data-track-index="2">
+  <div class="cx">
+    <div id="s16-num">4,000+</div>
+    <div id="s16-txt">SALES PROS ALREADY MADE THIS SHIFT</div>
+  </div>
+</div>
+
+<!-- S17: June 17th / 7pm  91.72 – 95.45s -->
+<div class="clip" data-start="91.72" data-duration="3.73" data-track-index="2">
+  <div class="cx" id="dt-wrap">
+    <div id="dt-eye">ONE SESSION ONLY</div>
+    <div id="dt-main">JUNE 17TH</div>
+    <div id="dt-time">7:00 PM EASTERN</div>
+  </div>
+</div>
+
+<!-- S18: 15 minutes could change everything  96.48 – 98.95s -->
+<div class="clip" data-start="96.48" data-duration="2.47" data-track-index="2">
+  <div class="cx" id="s18-wrap">
+    <div id="s18-min">15 MINUTES</div>
+    <div id="s18-rest">COULD CHANGE EVERYTHING.</div>
+  </div>
+</div>
+
+<!-- S19: END CARD  99.96 – 104.04s -->
+<div class="clip" data-start="99.96" data-duration="4.07" data-track-index="2">
+  <div id="end-card">
+    <div id="end-eye">RESERVE YOUR SPOT — IT'S FREE</div>
+    <div id="end-title">15-MINUTE<br>SALES SPRINT</div>
+    <div id="end-cta">⚡ CLICK BELOW ⚡</div>
+    <div id="end-free">15MINUTESALESSPRINT.COM &nbsp;·&nbsp; COMPLETELY FREE</div>
+  </div>
+</div>
+
+<script>
+(function () {
+  /* ─────────────────── AMBIENT BACKGROUND ─────────────────── */
+  // Ken Burns slow zoom (toolkit: Ken Burns Zoom)
+  gsap.to('#kb-wrap', { scale: 1.09, duration: 104, ease: 'none', transformOrigin: '40% 55%' });
+
+  // Orbs slow breathe
+  gsap.to('#orb-blue', { opacity: 0.12, duration: 4, ease: 'power2.out' });
+  gsap.to('#orb-blue', { scale: 1.2, duration: 12, repeat: 8, yoyo: true, ease: 'sine.inOut' });
+
+  // Scanline sweep across whole video
+  gsap.fromTo('#scanline',
+    { top: '-4px', opacity: 1 },
+    { top: '1084px', opacity: 0.5, duration: 3, ease: 'none', delay: 0.1 }
+  );
+
+  /* ─────────────────── GSAP TIMELINE ─────────────────── */
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines = window.__timelines || {};
+  window.__timelines['15-min-sales-sprint'] = tl;
+
+  /* ═══════════════════════════════════════════════════════
+     S1 — 82% STAT  (0.00s)
+     Toolkit: Metallic Grad-Fill + Product Hotspots (pulse rings)
+  ═══════════════════════════════════════════════════════ */
+  tl.fromTo('#s1-num',
+    { opacity: 0, scale: 0.55, y: 40 },
+    { opacity: 1, scale: 1,    y: 0,  duration: 0.55, ease: 'back.out(1.7)' },
+    0
+  );
+  tl.fromTo('#s1-sub',
+    { opacity: 0, y: 30, letterSpacing: '20px' },
+    { opacity: 1, y: 0,  letterSpacing: '6px',  duration: 0.6, ease: 'power3.out' },
+    0.45
+  );
+  // Pulsing rings (Product Hotspots)
+  tl.fromTo('#s1-ring1',
+    { opacity: 0, scale: 0.5 },
+    { opacity: 0.6, scale: 1, duration: 0.6, ease: 'power2.out' },
+    0.1
+  );
+  tl.to('#s1-ring1', { scale: 1.6, opacity: 0, duration: 1.5, repeat: 3, ease: 'power2.out' }, 0.7);
+  tl.fromTo('#s1-ring2',
+    { opacity: 0, scale: 0.5 },
+    { opacity: 0.4, scale: 1, duration: 0.7, ease: 'power2.out', delay: 0.2 },
+    0.2
+  );
+  tl.to('#s1-ring2', { scale: 1.5, opacity: 0, duration: 1.8, repeat: 2, ease: 'power2.out' }, 0.9);
+  // White flash out of S1
+  tl.to('#flash', { opacity: 0.65, duration: 0.05, overwrite: 'auto' }, 7.60);
+  tl.to('#flash', { opacity: 0,    duration: 0.35, overwrite: 'auto' }, 7.65);
+
+  /* ═══════════════════════════════════════════════════════
+     S2 — Are you showing up? (8.38s)
+     Toolkit: Marker Highlight on "SHOWING UP"
+  ═══════════════════════════════════════════════════════ */
+  tl.fromTo('#s2-q1',
+    { opacity: 0, x: -60 },
+    { opacity: 1, x: 0,  duration: 0.45, ease: 'power3.out' },
+    8.38
+  );
+  tl.fromTo('#s2-q2',
+    { opacity: 0, scale: 0.85 },
+    { opacity: 1, scale: 1,    duration: 0.5, ease: 'back.out(1.5)' },
+    8.88
+  );
+  // Cyan orb flare
+  tl.to('#orb-cyan', { opacity: 0.45, scale: 1.25, duration: 0.5 }, 8.9);
+  tl.to('#orb-cyan', { opacity: 0.22, scale: 1,    duration: 2   }, 9.5);
+
+  /* ═══════════════════════════════════════════════════════
+     S3 — Posting / scrolling / hoping (15.46s)
+     Staggered word reveal with fade-dim effect
+  ═══════════════════════════════════════════════════════ */
+  tl.fromTo('#s3-label',
+    { opacity: 0, y: -20 },
+    { opacity: 1, y: 0,   duration: 0.4, ease: 'power2.out' },
+    15.46
+  );
+  tl.fromTo('#s3-w1',
+    { opacity: 0, x: -80 },
+    { opacity: 1, x: 0,   duration: 0.35, ease: 'back.out(1.4)' },
+    16.52
+  );
+  tl.fromTo('#s3-w2',
+    { opacity: 0, x: -80 },
+    { opacity: 1, x: 0,   duration: 0.35, ease: 'back.out(1.4)' },
+    17.78
+  );
+  tl.fromTo('#s3-w3',
+    { opacity: 0, x: -80 },
+    { opacity: 1, x: 0,   duration: 0.35, ease: 'back.out(1.4)' },
+    18.98
+  );
+  // Zero bookings / zero pipeline animate exactly when Scott says them
+  tl.fromTo('#s3-z1',
+    { opacity: 0, x: -90 },
+    { opacity: 1, x: 0,   duration: 0.35, ease: 'back.out(1.5)' },
+    20.90
+  );
+  tl.fromTo('#s3-z2',
+    { opacity: 0, x: -90 },
+    { opacity: 1, x: 0,   duration: 0.35, ease: 'back.out(1.5)' },
+    23.00
+  );
+  // Blue flash into zero results
+  tl.to('#cyan-flash', { opacity: 0.35, duration: 0.06, overwrite: 'auto' }, 22.96);
+  tl.to('#cyan-flash', { opacity: 0,    duration: 0.25, overwrite: 'auto' }, 23.02);
+
+  /* ═══════════════════════════════════════════════════════
+     S3b — Zero results (23.34s)
+  ═══════════════════════════════════════════════════════ */
+  tl.fromTo('#s3b-z1',
+    { opacity: 0, scale: 1.2 },
+    { opacity: 1, scale: 1,   duration: 0.35, ease: 'power3.out' },
+    23.34
+  );
+  tl.fromTo('#s3b-z2',
+    { opacity: 0, scale: 1.2 },
+    { opacity: 1, scale: 1,   duration: 0.35, ease: 'power3.out' },
+    23.70
+  );
+
+  /* ═══════════════════════════════════════════════════════
+     S4 — Here's what's changed (25.40s)
+  ═══════════════════════════════════════════════════════ */
+  tl.to('#flash', { opacity: 0.5, duration: 0.05, overwrite: 'auto' }, 25.36);
+  tl.to('#flash', { opacity: 0,   duration: 0.3,  overwrite: 'auto' }, 25.41);
+  tl.fromTo('#s4-text',
+    { opacity: 0, scale: 0.8 },
+    { opacity: 1, scale: 1,   duration: 0.4, ease: 'back.out(1.4)' },
+    25.40
+  );
+
+  /* ═══════════════════════════════════════════════════════
+     S5 — AI transformed (26.38s)
+     Toolkit: Dynamic Hue Shift (cyan orb pulse)
+  ═══════════════════════════════════════════════════════ */
+  tl.fromTo('#s5-l1',
+    { opacity: 0, y: 50 },
+    { opacity: 1, y: 0,  duration: 0.5, ease: 'power3.out' },
+    26.38
+  );
+  tl.fromTo('#s5-l2',
+    { opacity: 0 },
+    { opacity: 1,        duration: 0.5, ease: 'power2.out' },
+    30.74
+  );
+  tl.to('#orb-cyan', { opacity: 0.5, scale: 1.35, duration: 0.5 }, 26.4);
+  tl.to('#orb-cyan', { opacity: 0.22, scale: 1,   duration: 3   }, 27.1);
+
+  /* ═══════════════════════════════════════════════════════
+     S6 — That's your window (34.60s)
+     Toolkit: Marker Highlight (underline draws in)
+  ═══════════════════════════════════════════════════════ */
+  tl.to('#flash', { opacity: 0.45, duration: 0.05, overwrite: 'auto' }, 34.56);
+  tl.to('#flash', { opacity: 0,    duration: 0.28, overwrite: 'auto' }, 34.61);
+  tl.fromTo('#s6-text',
+    { opacity: 0, letterSpacing: '30px', scale: 0.85 },
+    { opacity: 1, letterSpacing: '8px',  scale: 1,   duration: 0.5, ease: 'back.out(1.4)' },
+    34.60
+  );
+  // Marker underline draws in
+  tl.fromTo('#s6-line',
+    { width: 0 },
+    { width: '860px', duration: 0.6, ease: 'power3.out' },
+    35.0
+  );
+  tl.to('#orb-gold', { opacity: 0.4, scale: 1.4, duration: 0.5 }, 34.65);
+  tl.to('#orb-gold', { opacity: 0.15, scale: 1,  duration: 2   }, 35.3);
+
+  /* ═══════════════════════════════════════════════════════
+     S7 — HERO CARD (37.10s)
+     Toolkit: Liquid Reveal entrance + gold orb flare
+  ═══════════════════════════════════════════════════════ */
+  tl.to('#flash', { opacity: 0.9, duration: 0.07, overwrite: 'auto' }, 37.05);
+  tl.to('#flash', { opacity: 0,   duration: 0.45, overwrite: 'auto' }, 37.12);
+  tl.fromTo('#h-eye',
+    { opacity: 0, y: -20, letterSpacing: '30px' },
+    { opacity: 1, y: 0,   letterSpacing: '18px', duration: 0.45, ease: 'power3.out' },
+    37.10
+  );
+  tl.fromTo('#h-l1',
+    { opacity: 0, scale: 0.7, y: 30 },
+    { opacity: 1, scale: 1,   y: 0,  duration: 0.6, ease: 'back.out(1.5)' },
+    37.55
+  );
+  tl.fromTo('#h-l2',
+    { opacity: 0, scale: 0.7, y: 30 },
+    { opacity: 1, scale: 1,   y: 0,  duration: 0.6, ease: 'back.out(1.5)' },
+    38.0
+  );
+  tl.fromTo('#h-sub',
+    { opacity: 0, y: 20 },
+    { opacity: 1, y: 0,  duration: 0.5, ease: 'power2.out' },
+    41.3
+  );
+  // Gold flare during hero
+  tl.to('#orb-gold', { opacity: 0.45, scale: 1.5, duration: 0.6, overwrite: 'auto' }, 37.2);
+  tl.to('#orb-gold', { opacity: 0.15, scale: 1,   duration: 3.5, overwrite: 'auto' }, 38.0);
+
+  /* ═══════════════════════════════════════════════════════
+     S8 — LIVE AND FREE (47.12s)
+  ═══════════════════════════════════════════════════════ */
+  tl.fromTo('#live-badge',
+    { opacity: 0, scale: 0.55, y: -40 },
+    { opacity: 1, scale: 1,    y: 0,   duration: 0.4, ease: 'back.out(2)' },
+    47.12
+  );
+
+  /* ═══════════════════════════════════════════════════════
+     S9 — AI Prompt features (48.62s)
+  ═══════════════════════════════════════════════════════ */
+  tl.fromTo('#f1',
+    { opacity: 0, y: 40 },
+    { opacity: 1, y: 0,  duration: 0.45, ease: 'power3.out' },
+    49.24
+  );
+  tl.fromTo('#f2',
+    { opacity: 0, y: 40 },
+    { opacity: 1, y: 0,  duration: 0.45, ease: 'power3.out' },
+    51.88
+  );
+  tl.fromTo('#f3',
+    { opacity: 0 },
+    { opacity: 1,        duration: 0.4,  ease: 'power2.out' },
+    53.46
+  );
+
+  /* ═══════════════════════════════════════════════════════
+     S10 — 60 SECONDS (56.22s)
+     Large number slam + gold flash
+  ═══════════════════════════════════════════════════════ */
+  tl.to('#gold-flash', { opacity: 0.3, duration: 0.06, overwrite: 'auto' }, 56.18);
+  tl.to('#gold-flash', { opacity: 0,   duration: 0.28, overwrite: 'auto' }, 56.24);
+  tl.fromTo('#s10-num',
+    { opacity: 0, scale: 0.5 },
+    { opacity: 1, scale: 1,   duration: 0.4, ease: 'back.out(1.7)' },
+    56.22
+  );
+  tl.fromTo('#s10-unit',
+    { opacity: 0, y: 20 },
+    { opacity: 1, y: 0,  duration: 0.35, ease: 'power3.out' },
+    56.55
+  );
+
+  /* ═══════════════════════════════════════════════════════
+     S11 — Connection request (58.36s)
+     Toolkit: Marker Highlight (underline animates in)
+  ═══════════════════════════════════════════════════════ */
+  tl.fromTo('#s11-l1',
+    { opacity: 0, x: -70 },
+    { opacity: 1, x: 0,  duration: 0.45, ease: 'power3.out' },
+    58.36
+  );
+  // Marker underline draws left-to-right
+  tl.fromTo('#s11-underline',
+    { width: 0 },
+    { width: '900px', duration: 0.55, ease: 'power3.out' },
+    58.80
+  );
+  tl.fromTo('#s11-l2',
+    { opacity: 0, y: 30 },
+    { opacity: 1, y: 0,  duration: 0.5, ease: 'power2.out' },
+    61.94
+  );
+
+  /* ═══════════════════════════════════════════════════════
+     S12 — Follow-up sequence (67.38s)
+  ═══════════════════════════════════════════════════════ */
+  tl.to('#cyan-flash', { opacity: 0.25, duration: 0.06, overwrite: 'auto' }, 67.34);
+  tl.to('#cyan-flash', { opacity: 0,    duration: 0.28, overwrite: 'auto' }, 67.40);
+  tl.fromTo('#s12-l1',
+    { opacity: 0, y: 50 },
+    { opacity: 1, y: 0,  duration: 0.45, ease: 'power3.out' },
+    67.38
+  );
+  tl.fromTo('#s12-l2',
+    { opacity: 0, y: 50 },
+    { opacity: 1, y: 0,  duration: 0.45, ease: 'power3.out' },
+    70.10
+  );
+  tl.fromTo('#s12-l3',
+    { opacity: 0, y: 50 },
+    { opacity: 1, y: 0,  duration: 0.45, ease: 'power3.out' },
+    73.04
+  );
+
+  /* ═══════════════════════════════════════════════════════
+     S13 — Zero ad spend / No software / No fluff (75.86s)
+     Rapid-fire stagger
+  ═══════════════════════════════════════════════════════ */
+  tl.to('#cyan-flash', { opacity: 0.45, duration: 0.06, overwrite: 'auto' }, 75.82);
+  tl.to('#cyan-flash', { opacity: 0,    duration: 0.3,  overwrite: 'auto' }, 75.88);
+  tl.fromTo('#nf1',
+    { opacity: 0, x: -90 },
+    { opacity: 1, x: 0,   duration: 0.32, ease: 'back.out(1.5)' },
+    75.86
+  );
+  tl.fromTo('#nf2',
+    { opacity: 0, x: -90 },
+    { opacity: 1, x: 0,   duration: 0.32, ease: 'back.out(1.5)' },
+    77.92
+  );
+  tl.fromTo('#nf3',
+    { opacity: 0, x: -90 },
+    { opacity: 1, x: 0,   duration: 0.32, ease: 'back.out(1.5)' },
+    79.72
+  );
+
+  /* ═══════════════════════════════════════════════════════
+     S14 — ONE MOVE (81.36s)
+     Big slam + gold orb burst
+  ═══════════════════════════════════════════════════════ */
+  tl.to('#flash', { opacity: 0.7, duration: 0.05, overwrite: 'auto' }, 81.32);
+  tl.to('#flash', { opacity: 0,   duration: 0.3,  overwrite: 'auto' }, 81.37);
+  tl.fromTo('#s14-text',
+    { opacity: 0, scale: 0.55 },
+    { opacity: 1, scale: 1,    duration: 0.45, ease: 'back.out(2)' },
+    81.36
+  );
+  tl.fromTo('#s14-bolt',
+    { opacity: 0, scale: 0.4, rotation: -20 },
+    { opacity: 1, scale: 1,   rotation: 0,   duration: 0.35, ease: 'back.out(2)' },
+    81.65
+  );
+  tl.to('#orb-gold', { opacity: 0.55, scale: 1.7, duration: 0.3, overwrite: 'auto' }, 81.4);
+  tl.to('#orb-gold', { opacity: 0.15, scale: 1,   duration: 1.5, overwrite: 'auto' }, 81.8);
+
+  /* ═══════════════════════════════════════════════════════
+     S15 — Run before your next call (84.24s)
+  ═══════════════════════════════════════════════════════ */
+  tl.fromTo('#s15-l1',
+    { opacity: 0, y: -30 },
+    { opacity: 1, y: 0,   duration: 0.4, ease: 'power3.out' },
+    84.24
+  );
+  tl.fromTo('#s15-l2',
+    { opacity: 0, y: 30 },
+    { opacity: 1, y: 0,   duration: 0.4, ease: 'power3.out' },
+    85.06
+  );
+
+  /* ═══════════════════════════════════════════════════════
+     S16 — 4,000+ proof (87.30s)
+     Toolkit: Metallic Grad-Fill on number
+  ═══════════════════════════════════════════════════════ */
+  tl.fromTo('#s16-num',
+    { opacity: 0, scale: 0.6, y: 30 },
+    { opacity: 1, scale: 1,   y: 0,  duration: 0.55, ease: 'back.out(1.5)' },
+    87.30
+  );
+  tl.fromTo('#s16-txt',
+    { opacity: 0 },
+    { opacity: 1,             duration: 0.45, ease: 'power2.out' },
+    87.82
+  );
+
+  /* ═══════════════════════════════════════════════════════
+     S17 — DATE CARD (91.72s)
+     Big flash entrance + gold burst
+  ═══════════════════════════════════════════════════════ */
+  tl.to('#flash', { opacity: 0.8, duration: 0.06, overwrite: 'auto' }, 91.68);
+  tl.to('#flash', { opacity: 0,   duration: 0.4,  overwrite: 'auto' }, 91.74);
+  tl.fromTo('#dt-eye',
+    { opacity: 0, y: -20 },
+    { opacity: 1, y: 0,   duration: 0.4, ease: 'power3.out' },
+    91.72
+  );
+  tl.fromTo('#dt-main',
+    { opacity: 0, scale: 0.7, y: 20 },
+    { opacity: 1, scale: 1,   y: 0,  duration: 0.6, ease: 'back.out(1.5)' },
+    92.00
+  );
+  tl.fromTo('#dt-time',
+    { opacity: 0, y: 20 },
+    { opacity: 1, y: 0,   duration: 0.45, ease: 'power3.out' },
+    94.32
+  );
+  tl.to('#orb-gold', { opacity: 0.6, scale: 1.8, duration: 0.4 }, 91.8);
+  tl.to('#orb-gold', { opacity: 0.15, scale: 1,  duration: 3   }, 92.5);
+
+  /* ═══════════════════════════════════════════════════════
+     S18 — 15 minutes could change everything (96.48s)
+  ═══════════════════════════════════════════════════════ */
+  tl.to('#cyan-flash', { opacity: 0.3, duration: 0.06, overwrite: 'auto' }, 96.44);
+  tl.to('#cyan-flash', { opacity: 0,   duration: 0.28, overwrite: 'auto' }, 96.50);
+  tl.fromTo('#s18-min',
+    { opacity: 0, scale: 0.8 },
+    { opacity: 1, scale: 1,   duration: 0.45, ease: 'back.out(1.5)' },
+    96.48
+  );
+  tl.fromTo('#s18-rest',
+    { opacity: 0, y: 25 },
+    { opacity: 1, y: 0,   duration: 0.45, ease: 'power3.out' },
+    97.00
+  );
+
+  /* ═══════════════════════════════════════════════════════
+     S19 — END CARD (99.96s)
+  ═══════════════════════════════════════════════════════ */
+  tl.fromTo('#end-card',
+    { opacity: 0 },
+    { opacity: 1,         duration: 0.8, ease: 'power2.inOut' },
+    99.96
+  );
+  tl.fromTo('#end-eye',
+    { opacity: 0, y: -20 },
+    { opacity: 1, y: 0,   duration: 0.5, ease: 'power3.out' },
+    100.20
+  );
+  tl.fromTo('#end-title',
+    { opacity: 0, scale: 0.85, y: 20 },
+    { opacity: 1, scale: 1,    y: 0,  duration: 0.6, ease: 'back.out(1.4)' },
+    100.55
+  );
+  tl.fromTo('#end-cta',
+    { opacity: 0, scale: 0.7 },
+    { opacity: 1, scale: 1,   duration: 0.5, ease: 'back.out(1.7)' },
+    101.20
+  );
+  // Pulsing CTA glow
+  tl.to('#end-cta', { boxShadow: '0 0 110px rgba(245,166,35,0.9)', repeat: 1, yoyo: true, duration: 0.75 }, 101.75);
+  tl.fromTo('#end-free',
+    { opacity: 0 },
+    { opacity: 1,         duration: 0.4 },
+    102.10
+  );
+
+})();
+</script>
+
+</div>
+</body>
+</html>
